@@ -39,7 +39,8 @@ def dashboard_css():
         box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         padding: 0 20px;
         
-        /* GRID Layout: Left content, Center space for title, Right spacer */
+        /* GRID Layout: Left actions, Center space for title, Right spacer */
+        /* Columns: auto (left actions) | 1fr (flexible center title) | auto (right spacer/empty) */
         display: grid;
         grid-template-columns: auto 1fr auto; 
         align-items: center;
@@ -48,7 +49,7 @@ def dashboard_css():
     
     /* Dashboard Title Styling (Centered using the 1fr middle grid cell) */
     .dashboard-title-text {
-        grid-column: 2 / 3; /* Position in the center cell */
+        grid-column: 2 / 3; /* Position in the flexible center cell */
         font-size: 2rem;
         font-weight: 700;
         color: #fff;
@@ -59,7 +60,7 @@ def dashboard_css():
 
     /* Left Side Actions Styling */
     .header-actions-left {
-        grid-column: 1 / 2; /* Position in the left cell */
+        grid-column: 1 / 2; /* Position in the leftmost cell */
         display: flex;
         justify-content: flex-start;
         align-items: center;
@@ -93,12 +94,13 @@ def dashboard_css():
         border-radius: 8px;
         font-size: 0.9rem;
         font-weight: 600;
-        width: fit-content; 
+        width: fit-content; /* Force width to fit content */
         min-width: unset; 
         padding: 5px 10px;
         height: 30px;
         transition: background-color 0.2s;
         border: none;
+        margin-left: 0; /* Remove any default Streamlit margin that pushes it */
     }
     [data-testid="stButton"][key="header_logout"] button:hover {
         background-color: #e57373; /* Light red hover for danger/logout */
@@ -149,10 +151,9 @@ def dashboard(username):
     st.markdown('</div>', unsafe_allow_html=True) # Close header-actions-left
     
     # 2. Center Content (Dashboard Title)
-    # The grid structure's central cell is implicitly defined here
     st.markdown('<div class="dashboard-title-text">Dashboard</div>', unsafe_allow_html=True)
     
-    # 3. Right Spacer (Automatic 3rd Grid Column - Content is empty)
+    # 3. Right Spacer (Implicitly created by the grid structure)
     
     st.markdown('</div>', unsafe_allow_html=True) # Close fixed-header-container
 
