@@ -14,6 +14,11 @@ def show_evidence_library():
     """Placeholder screen for Evidence Library."""
     st.title("Evidence Library")
     st.markdown("---")
+    # Added back button for navigation flow
+    if st.button("⬅ Back to Dashboard"):
+        st.session_state.page = "main"
+        st.rerun()
+
     st.text_input("Search Evidence Library", placeholder="Enter keywords, hash values, or file names...")
     st.markdown('<div style="margin-top: 50px; padding: 30px; border: 1px dashed #555; border-radius: 10px; color: #aaa; text-align: center;">\
         <h3>No Evidence Uploaded Yet</h3>\
@@ -24,6 +29,11 @@ def show_search_cases():
     """Placeholder screen for Search Cases."""
     st.title("Search Historical Cases")
     st.markdown("---")
+    # Added back button for navigation flow
+    if st.button("⬅ Back to Dashboard"):
+        st.session_state.page = "main"
+        st.rerun()
+
     st.text_input("Search Cases", placeholder="Enter case number, investigator name, or keywords...")
     st.markdown('<div style="margin-top: 50px; padding: 30px; border: 1px dashed #555; border-radius: 10px; color: #aaa; text-align: center;">\
         <h3>No Cases Archived</h3>\
@@ -34,6 +44,11 @@ def show_legal_reference():
     """Placeholder screen for Legal Reference."""
     st.title("Legal Reference and Standards")
     st.markdown("---")
+    # Added back button for navigation flow
+    if st.button("⬅ Back to Dashboard"):
+        st.session_state.page = "main"
+        st.rerun()
+
     st.markdown('<div style="padding: 30px; border: 1px dashed #555; border-radius: 10px; color: #aaa;">\
         <p>This section is reserved for relevant legal statutes, compliance documentation, and digital forensics standards.</p>\
         <p>Content to be integrated...</p>\
@@ -45,47 +60,54 @@ def show_new_case_selector():
     
     col1, col2, col3, col4 = st.columns(4)
 
-    # Use a single, dark blue button color scheme for consistency
-    button_style = """
+    # Back button for navigation flow
+    if st.button("⬅ Back to Dashboard"):
+        st.session_state.page = "main"
+        st.rerun()
+
+    # Updated button style for selector screen: #1c4868 background, #61a3cd border/outline
+    selector_button_style = """
         button {
-            background-color: #15425b !important;
+            background-color: #1c4868 !important;
             color: #fff !important;
+            border: 2px solid #61a3cd !important; 
             border-radius: 12px;
             height: 60px;
             font-size: 1.1rem;
             width: 100%;
             margin-bottom: 12px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            transition: background-color 0.2s;
+            transition: background-color 0.2s, border-color 0.2s;
         }
         button:hover {
-            background-color: #367588 !important; /* Darker hover */
+            background-color: #367588 !important; 
+            border: 2px solid #fff !important;
         }
     """
     
     with col1:
-        with stylable_container("cdr_button", css_styles=button_style):
+        with stylable_container("cdr_button", css_styles=selector_button_style):
             if st.button("CDR Analysis", key="select_cdr"):
                 st.session_state.page = "cdr"
                 st.session_state.form_submitted = False
                 st.rerun()
 
     with col2:
-        with stylable_container("ipdr_button", css_styles=button_style):
+        with stylable_container("ipdr_button", css_styles=selector_button_style):
             if st.button("IPDR Analysis", key="select_ipdr"):
                 st.session_state.page = "ipdr"
                 st.session_state.form_submitted = False
                 st.rerun()
 
     with col3:
-        with stylable_container("firewall_button", css_styles=button_style):
+        with stylable_container("firewall_button", css_styles=selector_button_style):
             if st.button("Firewall Logs", key="select_firewall"):
                 st.session_state.page = "firewall"
                 st.session_state.form_submitted = False
                 st.rerun()
 
     with col4:
-        with stylable_container("correlation_button", css_styles=button_style):
+        with stylable_container("correlation_button", css_styles=selector_button_style):
             if st.button("Correlation", key="select_correlation"):
                 st.session_state.page = "correlation"
                 st.session_state.form_submitted = False
@@ -99,8 +121,8 @@ def dashboard_css():
     <style>
     /* 1. Global Background and Padding */
     .main .block-container {
-        /* This prevents Streamlit's default padding from creating unnecessary space */
-        padding-top: 150px !important; /* Adjusted top padding for fixed header and nav */
+        /* Adjusted top padding: 100px (header) + 50px (nav bar) + 20px (gap) = 170px for safety */
+        padding-top: 170px !important; 
         padding-left: 40px;
         padding-right: 40px;
         padding-bottom: 40px;
@@ -110,7 +132,7 @@ def dashboard_css():
         background: #001928 !important; /* New Dark Background */
     }
 
-    /* 2. Header Style */
+    /* 2. Header Style (Top Bar: Title, User, Logout) */
     .dashboard-header {
         position: fixed;
         left: 0;
@@ -132,7 +154,7 @@ def dashboard_css():
         margin-right: 32px;
     }
 
-    /* 3. User Actions (Logout/Avatar) */
+    /* 3. User Actions (Logout/Avatar) - Now includes the logout button */
     .dashboard-header-spacer {
         flex: 1;
     }
@@ -161,8 +183,25 @@ def dashboard_css():
         font-size: 1.2rem;
         color: #fff;
     }
+    /* Style for the Logout Button inside the header */
+    [data-testid="stButton"][key="header_logout"] button {
+        background-color: #367588; 
+        color: white;
+        border-radius: 8px;
+        font-size: 1.0rem;
+        font-weight: 600;
+        width: auto;
+        padding: 8px 15px;
+        height: 40px;
+        margin: 0;
+        transition: background-color 0.2s;
+        border: none;
+    }
+    [data-testid="stButton"][key="header_logout"] button:hover {
+        background-color: #e57373; /* Light red hover for danger/logout */
+    }
     
-    /* 4. Top Navigation Bar (Positioned immediately below the fixed header) */
+    /* 4. Top Navigation Bar (Just below the fixed header) */
     .nav-bar-container {
         position: fixed;
         top: 100px; /* Right below the 100px header */
@@ -170,10 +209,27 @@ def dashboard_css():
         width: 100%;
         background-color: #001928; /* Matches background for seamless look */
         padding: 10px 40px;
-        z-index: 9; /* Slightly lower than header */
-        box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        z-index: 9; 
     }
     
+    /* Global style for main navigation buttons (New Case, Evidence Library, etc.) */
+    .main-nav-button button {
+        background-color: #1c4868 !important; 
+        color: white;
+        border: 2px solid #61a3cd !important; /* Light blue border */
+        border-radius: 8px;
+        font-size: 1.05rem;
+        font-weight: 600;
+        width: 100%;
+        height: 40px; 
+        margin: 0;
+        transition: all 0.2s;
+    }
+    .main-nav-button button:hover {
+        background-color: #367588 !important;
+        border-color: #fff !important;
+    }
+
     /* 5. Main Content Area */
     .dashboard-main {
         padding-top: 20px;
@@ -181,7 +237,7 @@ def dashboard_css():
     .section-header {
         font-size: 1.8rem;
         font-weight: 700;
-        color: #fff; /* White header text */
+        color: #3a7ba4 !important; /* Bookmarked/Recent Cases Header Color */
         margin-top: 30px;
         margin-bottom: 15px;
         border-bottom: 2px solid #367588;
@@ -223,43 +279,38 @@ def dashboard(username):
     # --- Header (Fixed position) ---
     st.markdown(f'''
         <div class="dashboard-header">
-            <div class="dashboard-title">Anomalyze</div>
+            <div class="dashboard-title">Dashboard</div> <!-- Changed title to "Dashboard" -->
             <div class="dashboard-header-spacer"></div>
             <div class="user-actions">
                 <div class="user-box">
                     {username.upper()}
                     <div class="user-avatar">👤</div>
                 </div>
+                <!-- Logout Button now resides in the header -->
+                <div style="margin-left: 10px;">
+                    {st.button("Logout", key="header_logout")} 
+                </div>
             </div>
         </div>
     ''', unsafe_allow_html=True)
     
+    # Logic for header logout button click
+    if st.session_state.get('header_logout_clicked'):
+        st.session_state.logged_in = False
+        st.session_state.current_user = ""
+        st.session_state.page = "main"
+        st.rerun()
+
     # --- Navigation Bar (Fixed position right below the header) ---
     st.markdown('<div class="nav-bar-container">', unsafe_allow_html=True)
     
-    # Define columns within the fixed navigation container
-    nav_col1, nav_col2, nav_col3, nav_col4, nav_col_spacer, nav_col_logout = st.columns([1, 1, 1, 1, 3.5, 0.5])
+    # Columns for navigation, ensuring equal width
+    nav_col1, nav_col2, nav_col3, nav_col4 = st.columns(4)
 
-    # Function to create a nav button
+    # Function to create a nav button with common styling
     def nav_button(label, key, target_page, col):
         with col:
-            # Apply styling to the button container to control its appearance
-            with stylable_container(f"nav_button_{key}", css_styles="""
-                button {
-                    background-color: #367588; 
-                    color: white;
-                    border-radius: 8px;
-                    font-size: 1.05rem;
-                    font-weight: 600;
-                    width: 100%;
-                    height: 40px; /* Reduced height for nav bar */
-                    margin: 0;
-                    transition: background-color 0.2s;
-                }
-                button:hover {
-                    background-color: #4c8a99;
-                }
-            """):
+            with stylable_container(f"nav_button_{key}", css_styles=".main-nav-button"):
                 if st.button(label, key=key, help=f"Go to {label}"):
                     st.session_state.page = target_page
                     st.rerun()
@@ -269,30 +320,6 @@ def dashboard(username):
     nav_button("Evidence Library", "nav_evidence", "evidence_library", nav_col2)
     nav_button("Search Cases", "nav_search", "search_cases", nav_col3)
     nav_button("Legal Reference", "nav_legal", "legal_reference", nav_col4)
-
-    # Logout button (separate style)
-    with nav_col_logout:
-        with stylable_container("logout_button", css_styles="""
-            button {
-                background-color: #367588; 
-                color: white;
-                border-radius: 8px;
-                font-size: 1.0rem;
-                font-weight: 600;
-                width: 100%;
-                height: 40px; 
-                margin: 0;
-                transition: background-color 0.2s;
-            }
-            button:hover {
-                background-color: #e57373; /* Light red hover for danger/logout */
-            }
-        """):
-            if st.button("Logout", key="nav_logout"):
-                st.session_state.logged_in = False
-                st.session_state.current_user = ""
-                st.session_state.page = "main"
-                st.rerun()
                 
     st.markdown('</div>', unsafe_allow_html=True) # Close nav-bar-container
 
