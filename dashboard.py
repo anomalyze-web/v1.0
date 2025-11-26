@@ -146,10 +146,12 @@ body,[data-testid="stAppViewContainer"]{background:#001928!important;}
     display:flex;
     align-items:center;
     height: 60px; 
-    /* PINNED to absolute top, adjusted to 5px padding for minimum clearance */
+    /* Z-AXIS FIX: Give this row maximum stacking priority (z-index: 100) */
+    z-index: 100;
+    /* Y-AXIS FIX: PINNED to absolute top, AGGRESSIVELY moved up by -10px for maximum lift */
     position: absolute;
-    top: 0;
-    padding-top: 5px; 
+    top: -10px; /* Pushes the content higher than the container's physical top edge */
+    padding-top: 0px; 
 }
 /* Bottom row for Navigation Buttons */
 .fixed-nav-row{
@@ -158,9 +160,9 @@ body,[data-testid="stAppViewContainer"]{background:#001928!important;}
     align-items:center;
     height: 60px;
     padding-bottom: 5px;
-    /* Pinned exactly 60px from the top */
+    /* Pinned exactly 50px from the top (60px - 10px offset from the row above) */
     position: absolute;
-    top: 60px;
+    top: 50px; 
 }
 
 /* Adjusted title font size and margin to fit the header */
