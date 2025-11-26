@@ -111,9 +111,9 @@ def dashboard(username):
 body, [data-testid="stAppViewContainer"] {background: #001928 !important;}
 #fixed-header-container {position: fixed;left: 0;top: 0;width: 100%;z-index: 10;padding: 0 40px;background: #15425b;box-shadow: 0 4px 12px rgba(0,0,0,0.3);}
 .fixed-header-content {height: 60px;display: flex;align-items: center;}
-.dashboard-title {font-size: 2rem;font-weight: 700;color: #fff;margin-right: 32px; text-align: center;}
+.dashboard-title {font-size: 2rem;font-weight: 700;color: #fff; text-align: center; line-height: 60px; height: 60px; margin: 0;}
 .user-actions {display: flex;align-items: center;gap: 16px;margin-left: auto;}
-.user-box {font-size: 1.2rem;font-weight: 600;color: #fff;display: flex;align-items: center;gap: 8px;}
+.user-box {font-size: 1.2rem;font-weight: 600;color: #fff;display: flex;align-items: center;gap: 8px; line-height: 60px; height: 60px; margin: 0;}
 .user-avatar {width: 36px;height: 36px;background: #367588;border-radius: 50%;display: flex;align-items: center;justify-content: center;font-size: 1.2rem;color: #fff;}
 #fixed-nav-container {position: fixed;top: 60px;left: 0;width: 100%;z-index: 9;background-color: #001928;padding: 10px 40px;box-shadow: 0 2px 5px rgba(0,0,0,0.3);}
 .main-nav-button button {background-color: #1c4868 !important;color: white;border: 2px solid #61a3cd !important;border-radius: 8px;font-size: 1.05rem;font-weight: 600;width: 100%;height: 40px;margin: 0;transition: all 0.2s;}
@@ -124,7 +124,19 @@ body, [data-testid="stAppViewContainer"] {background: #001928 !important;}
 .placeholder-box h4 {margin-top: 0;color: #fff;}
 [data-testid="stSidebar"] {display: none !important;}
 [data-testid="stSidebarContent"] {display: none !important;}
-[data-testid="stButton"][key="header_logout"] button {background-color: #367588;color: white;border-radius: 8px;font-size: 1.0rem;font-weight: 600;width: auto;padding: 8px 15px;height: 40px;margin: 0;transition: background-color 0.2s;border: none;}
+[data-testid="stButton"][key="header_logout"] button {
+    background-color: #367588;
+    color: white;
+    border-radius: 8px;
+    font-size: 1.0rem;
+    font-weight: 600;
+    width: 100px; 
+    padding: 8px 15px;
+    height: 40px;
+    margin: 0;
+    transition: background-color 0.2s;
+    border: none;
+}
 [data-testid="stButton"][key="header_logout"] button:hover {background-color: #e57373;}
 </style>
 """, unsafe_allow_html=True)
@@ -137,26 +149,21 @@ body, [data-testid="stAppViewContainer"] {background: #001928 !important;}
     st.markdown('<div id="fixed-header-container">', unsafe_allow_html=True)
     st.markdown('<div class="fixed-header-content">', unsafe_allow_html=True)
 
-    # New columns: User (Left), Title (Center), Logout (Right)
     user_col, title_col, logout_col = st.columns([2, 6, 2])
 
     with user_col:
-        # User/Account (Left side)
         st.markdown(f'''
-<div class="user-box">
+<div class="user-box" style="justify-content: flex-start;">
 <div class="user-avatar">👤</div>
 {username.upper()}
 </div>
 ''', unsafe_allow_html=True)
 
     with title_col:
-        # Dashboard Title (Center)
-        # We use a custom style to center the text within this column
-        st.markdown('<div class="dashboard-title" style="text-align: center; margin-right: 0px;">Dashboard</div>', unsafe_allow_html=True)
+        st.markdown('<div class="dashboard-title">Dashboard</div>', unsafe_allow_html=True)
 
 
     with logout_col:
-        # Logout Button (Right side)
         if st.button("Logout", key="header_logout"):
             st.session_state.logged_in = False
             st.session_state.current_user = ""
