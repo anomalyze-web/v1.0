@@ -104,7 +104,7 @@ def show_new_case_selector():
 def dashboard(username):
     st.set_page_config(page_title="Anomalyze Dashboard", layout="wide")
     
-    # Core Global, Fixed Header, Fixed Nav, and Button Styles (Keeping only the structure critical styles)
+    # CONSOLIDATED CSS BLOCK (All styles in one robust injection)
     st.markdown(f"""
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 <style>
@@ -200,9 +200,48 @@ body, [data-testid="stAppViewContainer"] {{background: #001928 !important;}}
     border: none;
 }}
 [data-testid="stButton"][key="header_logout"] button:hover {{background-color: #e57373;}}
+
+/* --- Utility Styles (Moved from failing blocks) --- */
+.main .block-container {{
+    padding-top: 180px !important;
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-bottom: 40px;
+    max-width: 100% !important;
+}}
+
+/* Note: The following section-header and placeholder-box styles are best handled via stylable_container below, 
+but are included here for completeness in the event the environment doesn't support stylable_container fully. */
+.section-header {{
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #3a7ba4 !important;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #367588;
+    padding-bottom: 5px;
+}}
+
+.placeholder-box {{
+    background: #15425b;
+    color: #99aab5;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}}
+
+.placeholder-box h4 {{
+    margin-top: 0;
+    color: #fff;
+}}
+
 </style>
 """, unsafe_allow_html=True)
     
+    # DELETED: main_container_styles injection (now in consolidated block)
+    # DELETED: section_header_styles injection (now in consolidated block)
+
     if "page" not in st.session_state:
         st.session_state.page = "main"
     if "form_submitted" not in st.session_state:
@@ -255,77 +294,17 @@ body, [data-testid="stAppViewContainer"] {{background: #001928 !important;}}
 
     st.markdown('</div>', unsafe_allow_html=True) 
 
-    
-    main_container_styles = """
-    div.block-container {
-        padding-top: 180px !important;
-        padding-left: 40px;
-        padding-right: 40px;
-        padding-bottom: 40px;
-        max-width: 100% !important;
-    }
-    """
-    st.markdown(f'<style>{main_container_styles}</style>', unsafe_allow_html=True)
-
     st.markdown('<div class="dashboard-main">', unsafe_allow_html=True)
 
     if st.session_state.page == "main":
         
-        section_header_styles = """
-        div[data-testid*="stMarkdown"] h2 {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #3a7ba4 !important;
-            margin-top: 30px;
-            margin-bottom: 15px;
-            border-bottom: 2px solid #367588;
-            padding-bottom: 5px;
-        }
-        """
-        # Inject section header styles (targeting H2)
-        st.markdown(f'<style>{section_header_styles}</style>', unsafe_allow_html=True)
-        
-        # Bookmarked Cases Section
-        with stylable_container(
-            key="bookmarked_cases_container",
-            css_styles="""
-            div {
-                background: #15425b; 
-                color: #99aab5;
-                padding: 20px;
-                border-radius: 12px;
-                margin-bottom: 20px;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-            }
-            h4 {
-                margin-top: 0;
-                color: #fff;
-            }
-            """
-        ):
-            st.markdown('<h2 class="section-header">Bookmarked Cases</h2>', unsafe_allow_html=True)
-            st.markdown('<h4>No bookmarked cases available.</h4><p>Use the bookmark feature on case analysis pages to quickly access important investigations.</p>', unsafe_allow_html=True)
+        # Bookmarked Cases Section - Using classes defined in the single CSS block
+        st.markdown('<h2 class="section-header">Bookmarked Cases</h2>', unsafe_allow_html=True)
+        st.markdown('<div class="placeholder-box"><h4>No bookmarked cases available.</h4><p>Use the bookmark feature on case analysis pages to quickly access important investigations.</p></div>', unsafe_allow_html=True)
 
-        # Recent Activity Section
-        with stylable_container(
-            key="recent_activity_container",
-            css_styles="""
-            div {
-                background: #15425b; 
-                color: #99aab5;
-                padding: 20px;
-                border-radius: 12px;
-                margin-bottom: 20px;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-            }
-            h4 {
-                margin-top: 0;
-                color: #fff;
-            }
-            """
-        ):
-            st.markdown('<h2 class="section-header">Recent Activity</h2>', unsafe_allow_html=True)
-            st.markdown('<h4>No recent cases analyzed.</h4><p>Start a new case using the "New Case" button above to begin your analysis.</p>', unsafe_allow_html=True)
+        # Recent Activity Section - Using classes defined in the single CSS block
+        st.markdown('<h2 class="section-header">Recent Activity</h2>', unsafe_allow_html=True)
+        st.markdown('<div class="placeholder-box"><h4>No recent cases analyzed.</h4><p>Start a new case using the "New Case" button above to begin your analysis.</p></div>', unsafe_allow_html=True)
 
     elif st.session_state.page == "new_case_selector":
         show_new_case_selector()
