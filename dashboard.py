@@ -277,29 +277,52 @@ def dashboard(username):
         st.session_state.form_submitted = False
 
     # --- Header (Fixed position) ---
+    # We use st.columns outside the st.markdown block to correctly render the button and its logic
+    
+    # 1. Logic for header logout button click
+    logout_button_clicked = st.session_state.get('header_logout_clicked', False)
+    if logout_button_clicked:
+        st.session_state.logged_in = False
+        st.session_state.current_user = ""
+        st.session_state.page = "main"
+        st.rerun()
+
+    # 2. Render the fixed header
     st.markdown(f'''
         <div class="dashboard-header">
-            <div class="dashboard-title">Dashboard</div> <!-- Changed title to "Dashboard" -->
+            <div class="dashboard-title">Dashboard</div>
             <div class="dashboard-header-spacer"></div>
             <div class="user-actions">
                 <div class="user-box">
                     {username.upper()}
                     <div class="user-avatar">👤</div>
                 </div>
-                <!-- Logout Button now resides in the header -->
-                <div style="margin-left: 10px;">
-                    {st.button("Logout", key="header_logout")} 
-                </div>
+                <!-- Placeholder for the Logout Button to be rendered below -->
+                <div id="logout-placeholder" style="margin-left: 10px;"></div>
             </div>
         </div>
     ''', unsafe_allow_html=True)
-    
-    # Logic for header logout button click
-    if st.session_state.get('header_logout_clicked'):
-        st.session_state.logged_in = False
-        st.session_state.current_user = ""
-        st.session_state.page = "main"
+
+    # 3. Render the Logout Button separately and use CSS to place it in the fixed header
+    # We use a special key here to track clicks in session state
+    if st.button("Logout", key="header_logout"):
+        # Set a session state flag to handle the rerun/logout process cleanly
+        st.session_state.header_logout_clicked = True
         st.rerun()
+        
+    # CSS to move the button into the fixed header's placeholder
+    st.markdown("""
+        <style>
+        /* Target the actual button Streamlit renders and move it */
+        [data-testid="stButton"][key="header_logout"] {
+            position: fixed;
+            top: 30px; /* Adjust this value to vertically center it within the 100px header */
+            right: 50px; /* Matches the header padding */
+            z-index: 11; /* Above the header (10) */
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
 
     # --- Navigation Bar (Fixed position right below the header) ---
     st.markdown('<div class="nav-bar-container">', unsafe_allow_html=True)
