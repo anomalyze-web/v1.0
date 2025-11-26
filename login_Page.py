@@ -1,7 +1,17 @@
 import streamlit as st
 import sqlite3
 import bcrypt
-from dashboard import dashboard  # Import the dashboard function
+# NOTE: Ensure 'dashboard.py' exists and contains a 'dashboard' function
+# from dashboard import dashboard 
+
+# Placeholder for dashboard function if actual file is missing
+def dashboard(username):
+    st.title(f"Welcome to the Dashboard, {username}!")
+    st.info("Your dashboard content goes here.")
+    if st.button("Logout", key="logout_dashboard"):
+        st.session_state.logged_in = False
+        st.session_state.current_user = ""
+        st.rerun()
 
 # --- SESSION STATE INITIALIZATION ---
 if "logged_in" not in st.session_state:
@@ -57,23 +67,26 @@ def check_user(username, password):
 
 st.set_page_config(page_title="Anomalyze Login", layout="wide")
 
-# --- CUSTOM CSS FOR LOGIN/SIGNUP PAGE (Updated Colors and Layout) ---
+# --- CUSTOM CSS FOR LOGIN/SIGNUP PAGE (V2 Layout and Color Palette) ---
 st.markdown("""
 <style>
-/* Main Background Color */
-body, [data-testid="stAppViewContainer"] {
-    background: #15425b !important; /* Dark Blue/Teal */
+/* Main Background Color: #15425b */
+body, [data-testid="stAppViewContainer"], .main {
+    background: #15425b !important; 
 }
-/* Left Panel (Welcome) - Dark Turquoise Background */
+
+/* Left Panel (Welcome) - Dark Turquoise Background and Dynamic Height */
 .left-panel-custom {
     background-color: #367588; /* Dark Turquoise/Teal */
     border-radius: 24px;
-    height: auto; /* Removed fixed height for better responsiveness */
-    width: 100%; /* Use full column width */
-    box-shadow: 0 8px 40px 0 rgba(25,25,112,0.11);
-    padding: 70px 30px; /* Adjusted padding */
-    position: relative;
-    backdrop-filter: blur(8px);
+    /* Added generous vertical padding to visually match login form height */
+    padding: 100px 30px; 
+    width: 100%; 
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center content vertically */
+    min-height: 350px; /* Ensure minimum height */
     animation: fadeIn 1.2s ease;
     opacity: 0.95;
 }
@@ -81,18 +94,20 @@ body, [data-testid="stAppViewContainer"] {
     from { opacity: 0; transform: translateY(-30px);}
     to { opacity: 0.95; transform: translateY(0);}
 }
+
 /* Left Panel Title - Text Color #15425b */
 .left-panel-title {
-    color: #15425b; /* Must be the main background color for contrast */
-    font-size: 5rem; /* Slightly reduced font size */
+    color: #15425b; 
+    font-size: 5rem; 
     font-weight: bold;
-    text-align: center; /* Center alignment within the panel */
-    line-height: 1.2;
+    text-align: center;
+    line-height: 1.1;
     letter-spacing: 1px;
-    text-shadow: 0 2px 12px rgba(0,0,0,0.09);
-    margin: 0; /* Removed conflicting margins */
+    text-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin: 0;
     width: 100%;
 }
+
 .login-title-custom {
     color: #ffff;
     font-size: 2.5rem;
@@ -102,6 +117,7 @@ body, [data-testid="stAppViewContainer"] {
     margin-top: 0;
     letter-spacing: 1px;
 }
+
 /* Input Fields - Grey Background */
 input[type="text"], input[type="password"] {
     color: #111 !important;
@@ -117,33 +133,34 @@ input[type="text"]::placeholder, input[type="password"]::placeholder {
 input[type="text"]:hover, input[type="password"]:hover, 
 input[type="text"]:focus, input[type="password"]:focus {
     border: 1.5px solid #40e0d0 !important; /* Light turquoise border on focus */
-    background-color: #f5f5f5 !important; /* Slightly lighter grey on hover */
+    background-color: #f5f5f5 !important; 
 }
 .stTextInput label, .stPassword label {
     color: #ffff !important;
 }
-/* Primary Button (Login/Signup) - Kept Original Contrast Color */
+
+/* Primary Button (Login/Signup) - Turquoise */
 .stButton>button {
     width: 100%;
     padding: 1.1rem;
     font-size: 1.2rem;
     font-weight: bold;
     border-radius: 10px;
-    background:#f0a73b; /* Original Orange/Yellow */
-    color: #fff;
+    background:#40e0d0; /* Turquoise */
+    color: #15425b; /* Dark text for contrast */
     box-shadow: 0 4px 16px rgba(43,65,98,0.10);
     margin-top: 1.3rem;
     transition: all 0.2s;
     border: none;
-    opacity: 0.9;
+    opacity: 0.95;
 }
 .stButton>button:hover {
-    background: #40e0d0 !important; /* Light turquoise hover for primary button */
+    background: #66e9dc !important; /* Lighter turquoise on hover */
     color: #15425b !important;
     transform: scale(1.02);
-    border: none;
 }
-/* Link Buttons (Switch Login/Signup) - Light Turquoise */
+
+/* Link Buttons (Switch Login/Signup) - Turquoise */
 [data-testid="stButton"][key="goto_signup"] button,
 [data-testid="stButton"][key="goto_login"] button {
     all: unset; /* Reset Streamlit button styling */
@@ -162,12 +179,12 @@ input[type="text"]:focus, input[type="password"]:focus {
 [data-testid="stButton"][key="goto_signup"] button:hover,
 [data-testid="stButton"][key="goto_login"] button:hover {
     opacity: 1;
-    color: #f5f5f5 !important; /* Light hover color */
+    color: #66e9dc !important; /* Lighter turquoise on hover */
 }
 
 /* ---- Reduce top spacing ---- */
 .main .block-container {
-    padding-top: 0rem !important;
+    padding-top: 2rem !important; /* Added slight top padding */
 }
 section > div:first-child {
     margin-top: 0rem !important;
@@ -177,20 +194,23 @@ section > div:first-child {
 """, unsafe_allow_html=True)
 
 def login_signup_ui():
-    # Adjusted logo placement/width
+    
+    # Logo centered above the main login structure
+    st.markdown('<div style="text-align: center;">', unsafe_allow_html=True)
     st.image("logo.png", width=400)
+    st.markdown('</div>', unsafe_allow_html=True)
     
-    # Use st.container to center the login box better in the right column
-    col1, col2, col3 = st.columns([1, 1.5, 1])
+    # 5% margin, 40% welcome, 10% spacer, 40% login, 5% margin (Total 100%)
+    # Streamlit columns are defined as fractions, so 5, 40, 10, 40, 5 works well.
+    m1, c_welcome, c_spacer, c_login, m2 = st.columns([5, 40, 10, 40, 5])
     
-    with col1:
+    with c_welcome:
         # Left Panel (Welcome)
         st.markdown('<div class="left-panel-custom">', unsafe_allow_html=True)
-        # The title now respects the column structure and has no negative margins
         st.markdown('<div class="left-panel-title">Welcome to<br>Anomalyze!</div>', unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
         
-    with col2:
+    with c_login:
         # Right Panel (Login/Signup Form)
         st.markdown('<div class="login-box-custom">', unsafe_allow_html=True)
         if not st.session_state.show_signup:
@@ -250,7 +270,6 @@ def login_signup_ui():
 
 def main():
     if st.session_state.logged_in:
-        # Assuming dashboard function exists in dashboard.py
         dashboard(st.session_state.current_user) 
     else:
         login_signup_ui()
