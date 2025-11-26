@@ -67,7 +67,7 @@ def check_user(username, password):
 
 st.set_page_config(page_title="Anomalyze Login", layout="wide")
 
-# --- CUSTOM CSS FOR LOGIN/SIGNUP PAGE (V2 Layout and Color Palette) ---
+# --- CUSTOM CSS FOR LOGIN/SIGNUP PAGE (V3 Layout and Color Palette) ---
 st.markdown("""
 <style>
 /* Main Background Color: #15425b */
@@ -79,14 +79,14 @@ body, [data-testid="stAppViewContainer"], .main {
 .left-panel-custom {
     background-color: #367588; /* Dark Turquoise/Teal */
     border-radius: 24px;
-    /* Added generous vertical padding to visually match login form height */
-    padding: 100px 30px; 
+    /* Increased padding to visually match the form height, accounting for reduced spacer */
+    padding: 110px 30px; 
     width: 100%; 
     box-shadow: 0 8px 40px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
     justify-content: center; /* Center content vertically */
-    min-height: 350px; /* Ensure minimum height */
+    min-height: 350px; 
     animation: fadeIn 1.2s ease;
     opacity: 0.95;
 }
@@ -95,10 +95,10 @@ body, [data-testid="stAppViewContainer"], .main {
     to { opacity: 0.95; transform: translateY(0);}
 }
 
-/* Left Panel Title - Text Color #15425b */
+/* Left Panel Title - Text Color #15425b, Increased Font Size */
 .left-panel-title {
     color: #15425b; 
-    font-size: 5rem; 
+    font-size: 6rem; /* Increased font size to fill the box */
     font-weight: bold;
     text-align: center;
     line-height: 1.1;
@@ -132,21 +132,21 @@ input[type="text"]::placeholder, input[type="password"]::placeholder {
 }
 input[type="text"]:hover, input[type="password"]:hover, 
 input[type="text"]:focus, input[type="password"]:focus {
-    border: 1.5px solid #40e0d0 !important; /* Light turquoise border on focus */
+    border: 1.5px solid #82c3d6 !important; /* Light turquoise border on focus */
     background-color: #f5f5f5 !important; 
 }
 .stTextInput label, .stPassword label {
     color: #ffff !important;
 }
 
-/* Primary Button (Login/Signup) - Turquoise */
+/* Primary Button (Login/Signup) - Turquoise #82c3d6 */
 .stButton>button {
     width: 100%;
     padding: 1.1rem;
     font-size: 1.2rem;
     font-weight: bold;
     border-radius: 10px;
-    background:#40e0d0; /* Turquoise */
+    background:#82c3d6; /* Updated Turquoise */
     color: #15425b; /* Dark text for contrast */
     box-shadow: 0 4px 16px rgba(43,65,98,0.10);
     margin-top: 1.3rem;
@@ -155,7 +155,7 @@ input[type="text"]:focus, input[type="password"]:focus {
     opacity: 0.95;
 }
 .stButton>button:hover {
-    background: #66e9dc !important; /* Lighter turquoise on hover */
+    background: #a3d8e6 !important; /* Lighter shade of 82c3d6 for hover */
     color: #15425b !important;
     transform: scale(1.02);
 }
@@ -165,7 +165,7 @@ input[type="text"]:focus, input[type="password"]:focus {
 [data-testid="stButton"][key="goto_login"] button {
     all: unset; /* Reset Streamlit button styling */
     background: none !important;
-    color: #40e0d0 !important; /* Light turquoise */
+    color: #40e0d0 !important; /* Base color: Light turquoise */
     border: none;
     padding: 0 !important;
     font-size: 1.08rem;
@@ -176,15 +176,16 @@ input[type="text"]:focus, input[type="password"]:focus {
     display: block;
     text-align: center;
 }
+/* Link Buttons Hover - Turquoise #82c3d6 */
 [data-testid="stButton"][key="goto_signup"] button:hover,
 [data-testid="stButton"][key="goto_login"] button:hover {
     opacity: 1;
-    color: #66e9dc !important; /* Lighter turquoise on hover */
+    color: #82c3d6 !important; /* Updated hover color */
 }
 
 /* ---- Reduce top spacing ---- */
 .main .block-container {
-    padding-top: 2rem !important; /* Added slight top padding */
+    padding-top: 2rem !important;
 }
 section > div:first-child {
     margin-top: 0rem !important;
@@ -200,9 +201,8 @@ def login_signup_ui():
     st.image("logo.png", width=400)
     st.markdown('</div>', unsafe_allow_html=True)
     
-    # 5% margin, 40% welcome, 10% spacer, 40% login, 5% margin (Total 100%)
-    # Streamlit columns are defined as fractions, so 5, 40, 10, 40, 5 works well.
-    m1, c_welcome, c_spacer, c_login, m2 = st.columns([5, 40, 10, 40, 5])
+    # New Column Ratio: 5% margin, 45% welcome, 5% spacer, 40% login, 5% margin (Total 100%)
+    m1, c_welcome, c_spacer, c_login, m2 = st.columns([5, 45, 5, 40, 5])
     
     with c_welcome:
         # Left Panel (Welcome)
