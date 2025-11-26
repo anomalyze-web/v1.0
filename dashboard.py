@@ -8,7 +8,6 @@ from FIREWALL_analysis import show_firewall_analysis
 from CO_Relation_analysis import show_correlation_analysis
 
 def show_evidence_library():
-    """Placeholder screen for Evidence Library."""
     st.title("Evidence Library")
     st.markdown("---")
     if st.button("⬅ Back to Dashboard"):
@@ -22,7 +21,6 @@ def show_evidence_library():
     </div>', unsafe_allow_html=True)
 
 def show_search_cases():
-    """Placeholder screen for Search Cases."""
     st.title("Search Historical Cases")
     st.markdown("---")
     if st.button("⬅ Back to Dashboard"):
@@ -36,7 +34,6 @@ def show_search_cases():
     </div>', unsafe_allow_html=True)
 
 def show_legal_reference():
-    """Placeholder screen for Legal Reference."""
     st.title("Legal Reference and Standards")
     st.markdown("---")
     if st.button("⬅ Back to Dashboard"):
@@ -49,7 +46,6 @@ def show_legal_reference():
     </div>', unsafe_allow_html=True)
 
 def show_new_case_selector():
-    """Selector for the specific type of case data to be uploaded."""
     st.markdown(f"### Select Data Type for New Case:")
 
     col1, col2, col3, col4 = st.columns(4)
@@ -108,7 +104,6 @@ def show_new_case_selector():
 def dashboard(username):
     st.set_page_config(page_title="Anomalyze Dashboard", layout="wide")
     
-    # CSS injection moved and compacted here to fix rendering issue
     st.markdown("""
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 <style>
@@ -116,7 +111,7 @@ def dashboard(username):
 body, [data-testid="stAppViewContainer"] {background: #001928 !important;}
 #fixed-header-container {position: fixed;left: 0;top: 0;width: 100%;z-index: 10;padding: 0 40px;background: #15425b;box-shadow: 0 4px 12px rgba(0,0,0,0.3);}
 .fixed-header-content {height: 60px;display: flex;align-items: center;}
-.dashboard-title {font-size: 2rem;font-weight: 700;color: #fff;margin-right: 32px;}
+.dashboard-title {font-size: 2rem;font-weight: 700;color: #fff;margin-right: 32px; text-align: center;}
 .user-actions {display: flex;align-items: center;gap: 16px;margin-left: auto;}
 .user-box {font-size: 1.2rem;font-weight: 600;color: #fff;display: flex;align-items: center;gap: 8px;}
 .user-avatar {width: 36px;height: 36px;background: #367588;border-radius: 50%;display: flex;align-items: center;justify-content: center;font-size: 1.2rem;color: #fff;}
@@ -142,20 +137,26 @@ body, [data-testid="stAppViewContainer"] {background: #001928 !important;}
     st.markdown('<div id="fixed-header-container">', unsafe_allow_html=True)
     st.markdown('<div class="fixed-header-content">', unsafe_allow_html=True)
 
-    title_col, spacer_col, user_col, logout_col = st.columns([2, 5, 2, 1.5])
-
-    with title_col:
-        st.markdown('<div class="dashboard-title">Dashboard</div>', unsafe_allow_html=True)
+    # New columns: User (Left), Title (Center), Logout (Right)
+    user_col, title_col, logout_col = st.columns([2, 6, 2])
 
     with user_col:
+        # User/Account (Left side)
         st.markdown(f'''
 <div class="user-box">
-{username.upper()}
 <div class="user-avatar">👤</div>
+{username.upper()}
 </div>
 ''', unsafe_allow_html=True)
 
+    with title_col:
+        # Dashboard Title (Center)
+        # We use a custom style to center the text within this column
+        st.markdown('<div class="dashboard-title" style="text-align: center; margin-right: 0px;">Dashboard</div>', unsafe_allow_html=True)
+
+
     with logout_col:
+        # Logout Button (Right side)
         if st.button("Logout", key="header_logout"):
             st.session_state.logged_in = False
             st.session_state.current_user = ""
