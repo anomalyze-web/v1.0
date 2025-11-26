@@ -41,8 +41,10 @@ def dashboard_css():
         
         /* GRID Layout: 3 equal parts for stability */
         display: grid;
-        grid-template-columns: 1fr auto 1fr; /* Left space, Center title (auto), Right actions */
+        /* Swap columns: Left actions (auto), Center title (auto), Right space */
+        grid-template-columns: auto auto 1fr; 
         align-items: center;
+        gap: 20px; /* Space between left actions and center title */
     }
     
     /* Dashboard Title Styling (Centered in the middle grid cell) */
@@ -54,11 +56,11 @@ def dashboard_css():
         white-space: nowrap;
     }
 
-    /* Right Side Actions Styling */
-    .header-actions-right {
-        grid-column: 3; /* Places this div in the rightmost column */
+    /* Left Side Actions Styling */
+    .header-actions-left {
+        grid-column: 1; /* Places this div in the leftmost column */
         display: flex;
-        justify-content: flex-end;
+        justify-content: flex-start;
         align-items: center;
         gap: 15px;
     }
@@ -83,14 +85,15 @@ def dashboard_css():
         color: #fff;
     }
     
-    /* Style for the Logout Button in the header */
+    /* Style for the Logout Button in the header (Content-fit width) */
     [data-testid="stButton"][key="header_logout"] button {
         background-color: #367588; 
         color: white;
         border-radius: 8px;
         font-size: 0.9rem;
         font-weight: 600;
-        width: auto;
+        width: fit-content; /* Make button only as wide as the content */
+        min-width: unset; /* Override Streamlit minimum width */
         padding: 5px 10px;
         height: 30px;
         transition: background-color 0.2s;
@@ -124,11 +127,8 @@ def dashboard(username):
     # --- Fixed Header (Title Bar with User/Logout) ---
     st.markdown('<div id="fixed-header-container">', unsafe_allow_html=True)
     
-    # 1. Dashboard Title (Centered)
-    st.markdown('<div class="dashboard-title-text">Dashboard</div>', unsafe_allow_html=True)
-    
-    # 2. User Actions (Right side)
-    st.markdown('<div class="header-actions-right">', unsafe_allow_html=True)
+    # 1. Left Actions (User Icon, ID, and Logout Button)
+    st.markdown('<div class="header-actions-left">', unsafe_allow_html=True)
     
     # User Icon and ID
     st.markdown(f'''
@@ -145,7 +145,14 @@ def dashboard(username):
         st.session_state.page = "main"
         st.rerun()
 
-    st.markdown('</div>', unsafe_allow_html=True) # Close header-actions-right
+    st.markdown('</div>', unsafe_allow_html=True) # Close header-actions-left
+    
+    # 2. Dashboard Title (Centered)
+    st.markdown('<div class="dashboard-title-text">Dashboard</div>', unsafe_allow_html=True)
+    
+    # 3. Right Spacer (Blank)
+    # The grid structure provides the third column automatically for spacing
+    
     st.markdown('</div>', unsafe_allow_html=True) # Close fixed-header-container
 
     # Main content area (intentionally blank)
