@@ -26,8 +26,8 @@ def init_db():
     conn = sqlite3.connect('users.db')
     c = conn.cursor()
     c.execute('''
-        CREATE TABLE IF NOT EXISTS users (
-            username TEXT PRIMARY KEY,
+        CREATE TABLE IF NOT EXISTS users (<
+            username TEXT PRIMARY KEY,<
             password TEXT NOT NULL
         )
     ''')
@@ -67,7 +67,7 @@ def check_user(username, password):
 
 st.set_page_config(page_title="Anomalyze Login", layout="wide")
 
-# --- CUSTOM CSS FOR LOGIN/SIGNUP PAGE (V3 Layout and Color Palette) ---
+# --- CUSTOM CSS FOR LOGIN/SIGNUP PAGE (V4 Layout and Color Palette) ---
 st.markdown("""
 <style>
 /* Main Background Color: #15425b */
@@ -79,14 +79,16 @@ body, [data-testid="stAppViewContainer"], .main {
 .left-panel-custom {
     background-color: #367588; /* Dark Turquoise/Teal */
     border-radius: 24px;
-    /* Increased padding to visually match the form height, accounting for reduced spacer */
-    padding: 110px 30px; 
+    /* Removed fixed padding and used a combination of padding and min-height 
+       to visually match the form's height up to the "Create account" button */
+    padding: 70px 30px; 
     width: 100%; 
     box-shadow: 0 8px 40px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
     justify-content: center; /* Center content vertically */
-    min-height: 350px; 
+    /* Estimated height based on form elements, slightly adjusted */
+    min-height: 480px; 
     animation: fadeIn 1.2s ease;
     opacity: 0.95;
 }
@@ -95,10 +97,10 @@ body, [data-testid="stAppViewContainer"], .main {
     to { opacity: 0.95; transform: translateY(0);}
 }
 
-/* Left Panel Title - Text Color #15425b, Increased Font Size */
+/* Left Panel Title - Text Color changed to WHITE for visibility */
 .left-panel-title {
-    color: #15425b; 
-    font-size: 6rem; /* Increased font size to fill the box */
+    color: #FFFFFF; /* Changed to white for visibility on dark turquoise background */
+    font-size: 5rem; /* Adjusted font size to better fit the box */
     font-weight: bold;
     text-align: center;
     line-height: 1.1;
@@ -160,12 +162,12 @@ input[type="text"]:focus, input[type="password"]:focus {
     transform: scale(1.02);
 }
 
-/* Link Buttons (Switch Login/Signup) - Turquoise */
+/* Link Buttons (Switch Login/Signup) - Link color #40e0d0, Hover color #82c3d6 */
 [data-testid="stButton"][key="goto_signup"] button,
 [data-testid="stButton"][key="goto_login"] button {
     all: unset; /* Reset Streamlit button styling */
     background: none !important;
-    color: #40e0d0 !important; /* Base color: Light turquoise */
+    color: #40e0d0 !important; /* Light turquoise link color */
     border: none;
     padding: 0 !important;
     font-size: 1.08rem;
@@ -176,7 +178,7 @@ input[type="text"]:focus, input[type="password"]:focus {
     display: block;
     text-align: center;
 }
-/* Link Buttons Hover - Turquoise #82c3d6 */
+/* Link Buttons Hover - Updated to Turquoise #82c3d6 */
 [data-testid="stButton"][key="goto_signup"] button:hover,
 [data-testid="stButton"][key="goto_login"] button:hover {
     opacity: 1;
