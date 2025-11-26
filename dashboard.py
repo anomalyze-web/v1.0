@@ -107,12 +107,10 @@ def dashboard(username):
     st.markdown("""
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 <style>
-/* Reset and Global Styles */
 [data-testid="stAppViewContainer"] {margin-top: 0 !important; padding-top: 0 !important;}
 body, [data-testid="stAppViewContainer"] {background: #001928 !important;}
 [data-testid="stSidebar"], [data-testid="stSidebarContent"] {display: none !important;}
 
-/* --- FIXED HEADER (TOP BAR) --- */
 #fixed-header-container {
     position: fixed;
     left: 0;
@@ -120,9 +118,9 @@ body, [data-testid="stAppViewContainer"] {background: #001928 !important;}
     width: 100%;
     z-index: 10;
     padding: 0 40px;
-    background: #15425b; /* Requested Color */
+    background: #15425b; 
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    height: 120px; /* Requested Height */
+    height: 120px; 
     display: flex;
     align-items: center;
 }
@@ -159,10 +157,9 @@ body, [data-testid="stAppViewContainer"] {background: #001928 !important;}
     color: #fff;
 }
 
-/* --- FIXED NAVIGATION BAR --- */
 #fixed-nav-container {
     position: fixed;
-    top: 120px; /* Starts exactly below the 120px header */
+    top: 120px; 
     left: 0;
     width: 100%;
     z-index: 9;
@@ -171,7 +168,6 @@ body, [data-testid="stAppViewContainer"] {background: #001928 !important;}
     box-shadow: 0 2px 5px rgba(0,0,0,0.3);
 }
 
-/* Navigation Button Styles */
 .main-nav-button button {
     background-color: #1c4868 !important;
     color: white;
@@ -189,7 +185,6 @@ body, [data-testid="stAppViewContainer"] {background: #001928 !important;}
     border-color: #fff !important;
 }
 
-/* Logout Button (Sized to match nav buttons) */
 [data-testid="stButton"][key="header_logout"] button {
     background-color: #367588;
     color: white;
@@ -205,8 +200,6 @@ body, [data-testid="stAppViewContainer"] {background: #001928 !important;}
 }
 [data-testid="stButton"][key="header_logout"] button:hover {background-color: #e57373;}
 
-/* --- MAIN CONTENT PADDING --- */
-/* Push the main content down below the 120px header and ~60px nav bar */
 .main .block-container {
     padding-top: 180px !important;
     padding-left: 40px;
@@ -229,8 +222,6 @@ body, [data-testid="stAppViewContainer"] {background: #001928 !important;}
     st.markdown('<div id="fixed-header-container">', unsafe_allow_html=True)
     st.markdown('<div class="fixed-header-content">', unsafe_allow_html=True)
 
-    # Header Layout: Account (Left) | Dashboard (Center) | Logout (Right)
-    # Using specific column ratios to help center the title
     user_col, title_col, logout_col = st.columns([2, 6, 2])
 
     with user_col:
@@ -246,7 +237,6 @@ body, [data-testid="stAppViewContainer"] {background: #001928 !important;}
 
 
     with logout_col:
-        # Style the container to push the button to the far right
         st.markdown('<div style="width: 100%; display: flex; justify-content: flex-end; align-items: center;">', unsafe_allow_html=True)
         if st.button("Logout", key="header_logout"):
             st.session_state.logged_in = False
