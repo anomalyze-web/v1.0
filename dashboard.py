@@ -146,8 +146,10 @@ body,[data-testid="stAppViewContainer"]{background:#001928!important;}
     display:flex;
     align-items:center;
     height: 60px; 
-    /* NEW: Removed padding-top and added negative margin to push content up */
-    margin-top: -10px; 
+    /* NEW FIX: Pin row to the absolute top of the container and add padding to move content down */
+    position: absolute;
+    top: 0;
+    padding-top: 10px; /* Use this to adjust vertical centering relative to top edge */
 }
 /* Bottom row for Navigation Buttons */
 .fixed-nav-row{
@@ -156,8 +158,9 @@ body,[data-testid="stAppViewContainer"]{background:#001928!important;}
     align-items:center;
     height: 60px;
     padding-bottom: 5px;
-    /* NEW: Added slight margin top to adjust below the pushed-up top row */
-    margin-top: -10px; 
+    /* NEW FIX: Pin this row exactly 60px from the top */
+    position: absolute;
+    top: 60px;
 }
 
 /* Adjusted title font size and margin to fit the header */
