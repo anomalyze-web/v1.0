@@ -115,26 +115,36 @@ def show_new_case_selector():
                 st.rerun()
 
 def inject_css():
-    # Final, highly-compressed single-line CSS to prevent Streamlit's Markdown parser from bleeding the content.
     # The external link is kept separate for safety.
     st.markdown('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">', unsafe_allow_html=True)
     
+    # CSS compressed for injection reliability, with height adjustments for the header and navigation.
     css_code_compressed = """
 <style>
 [data-testid="stAppViewContainer"]{margin-top:0!important;padding-top:0!important;}
 body,[data-testid="stAppViewContainer"]{background:#001928!important;}
 [data-testid="stSidebar"],[data-testid="stSidebarContent"]{display:none!important;}
-#fixed-header-container{position:fixed;left:0;top:0;width:100%;z-index:10;padding:0 40px;background:#15425b;box-shadow:0 4px 12px rgba(0,0,0,0.3);height:120px;display:flex;align-items:center;}
+
+/* ADJUSTED HEADER HEIGHT to 60px */
+#fixed-header-container{position:fixed;left:0;top:0;width:100%;z-index:10;padding:0 40px;background:#15425b;box-shadow:0 4px 12px rgba(0,0,0,0.3);height:60px;display:flex;align-items:center;}
 .fixed-header-content{width:100%;display:flex;align-items:center;}
-.dashboard-title{font-size:2.5rem;font-weight:700;color:#fff;text-align:center;margin:0;line-height:1.2;}
-.user-box{font-size:1.2rem;font-weight:600;color:#fff;display:flex;align-items:center;gap:8px;}
-.user-avatar{width:36px;height:36px;background:#367588;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;color:#fff;}
-#fixed-nav-container{position:fixed;top:120px;left:0;width:100%;z-index:9;background-color:#001928;padding:10px 40px;box-shadow:0 2px 5px rgba(0,0,0,0.3);}
+
+/* Adjusted title font size and margin to fit the smaller header */
+.dashboard-title{font-size:1.8rem;font-weight:700;color:#fff;text-align:center;margin:0;line-height:1.2;}
+.user-box{font-size:1.0rem;font-weight:600;color:#fff;display:flex;align-items:center;gap:8px;}
+.user-avatar{width:30px;height:30px;background:#367588;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.0rem;color:#fff;}
+
+/* Adjusted Navigation position to be immediately below the 60px header */
+#fixed-nav-container{position:fixed;top:60px;left:0;width:100%;z-index:9;background-color:#001928;padding:10px 40px;box-shadow:0 2px 5px rgba(0,0,0,0.3);}
 .main-nav-button button{background-color:#1c4868!important;color:white;border:2px solid #61a3cd!important;border-radius:8px;font-size:1.05rem;font-weight:600;width:100%;height:40px;margin:0;transition:all 0.2s;}
 .main-nav-button button:hover{background-color:#367588!important;border-color:#fff!important;}
-[data-testid="stButton"][key="header_logout"] button{background-color:#367588;color:white;border-radius:8px;font-size:1.0rem;font-weight:600;width:100px;padding:8px 15px;height:40px;margin:0;transition:background-color 0.2s;border:none;}
+
+/* Adjusted Logout button size to fit the smaller header */
+[data-testid="stButton"][key="header_logout"] button{background-color:#367588;color:white;border-radius:8px;font-size:0.9rem;font-weight:600;width:80px;padding:5px 10px;height:30px;margin:0;transition:background-color 0.2s;border:none;}
 [data-testid="stButton"][key="header_logout"] button:hover{background-color:#e57373;}
-.main .block-container{padding-top:180px!important;padding-left:40px;padding-right:40px;padding-bottom:40px;max-width:100%!important;}
+
+/* Main Content Area Padding - Accounts for fixed header (60px) and nav (approx 60px) */
+.main .block-container{padding-top:140px!important;padding-left:40px;padding-right:40px;padding-bottom:40px;max-width:100%!important;}
 .section-header{font-size:1.8rem;font-weight:700;color:#3a7ba4!important;margin-top:30px;margin-bottom:15px;border-bottom:2px solid #367588;padding-bottom:5px;}
 .placeholder-box{background:#15425b;color:#99aab5;padding:20px;border-radius:12px;margin-bottom:20px;box-shadow:0 2px 8px rgba(0,0,0,0.15);}
 .placeholder-box h4{margin-top:0;color:#fff;}
@@ -160,12 +170,15 @@ def dashboard(username):
         st.session_state.current_user = username
 
     # 3. FIXED HEADER HTML STRUCTURE
+    # The header is now 60px tall and contains User, Title, and Logout on one row.
     st.markdown('<div id="fixed-header-container">', unsafe_allow_html=True)
     st.markdown('<div class="fixed-header-content">', unsafe_allow_html=True)
 
+    # Use columns to align the three elements horizontally
     user_col, title_col, logout_col = st.columns([2, 6, 2])
 
     with user_col:
+        # User Avatar and Name (Left Aligned)
         st.markdown(f'''
 <div class="user-box" style="justify-content: flex-start;">
 <div class="user-avatar">👤</div>
@@ -174,10 +187,12 @@ def dashboard(username):
 ''', unsafe_allow_html=True)
 
     with title_col:
-        st.markdown('<div class="dashboard-title">Dashboard</div>', unsafe_allow_html=True)
+        # Dashboard Title (Center Aligned)
+        st.markdown('<div class="dashboard-title">Anomalyze Dashboard</div>', unsafe_allow_html=True)
 
 
     with logout_col:
+        # Logout Button (Right Aligned)
         st.markdown('<div style="width: 100%; display: flex; justify-content: flex-end; align-items: center;">', unsafe_allow_html=True)
         if st.button("Logout", key="header_logout"):
             st.session_state.logged_in = False
@@ -189,7 +204,7 @@ def dashboard(username):
     st.markdown('</div>', unsafe_allow_html=True) 
     st.markdown('</div>', unsafe_allow_html=True) 
 
-    # 4. FIXED NAVIGATION HTML STRUCTURE
+    # 4. FIXED NAVIGATION HTML STRUCTURE (Now starts at top: 60px)
     st.markdown('<div id="fixed-nav-container">', unsafe_allow_html=True)
 
     nav_col1, nav_col2, nav_col3, nav_col4 = st.columns(4)
