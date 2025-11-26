@@ -39,7 +39,7 @@ def dashboard_css():
         box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         padding: 0 20px;
         
-        /* GRID Layout: Left actions, Center space for title, Right spacer */
+        /* GRID Layout: Left actions | Center title | Right spacer (empty) */
         /* Columns: auto (left actions) | 1fr (flexible center title) | auto (right spacer/empty) */
         display: grid;
         grid-template-columns: auto 1fr auto; 
@@ -58,7 +58,7 @@ def dashboard_css():
         margin: 0; 
     }
 
-    /* Left Side Actions Styling */
+    /* Left Side Actions Styling - Contains User ID and Logout Button */
     .header-actions-left {
         grid-column: 1 / 2; /* Position in the leftmost cell */
         display: flex;
@@ -100,7 +100,7 @@ def dashboard_css():
         height: 30px;
         transition: background-color 0.2s;
         border: none;
-        margin-left: 0; /* Remove any default Streamlit margin that pushes it */
+        margin: 0; /* Important: Remove all margins/padding to stop pushing other elements */
     }
     [data-testid="stButton"][key="header_logout"] button:hover {
         background-color: #e57373; /* Light red hover for danger/logout */
@@ -113,6 +113,8 @@ def dashboard_css():
     #fixed-header-container p {
         margin: 0;
         padding: 0;
+        /* Ensure that the containing markdown p tag does not break grid alignment */
+        display: contents; 
     }
     </style>
     """, unsafe_allow_html=True)
@@ -131,9 +133,12 @@ def dashboard(username):
     st.markdown('<div id="fixed-header-container">', unsafe_allow_html=True)
     
     # 1. Left Content (User Icon, ID, and Logout Button)
-    st.markdown('<div class="header-actions-left">', unsafe_allow_html=True)
+    # We use st.columns inside the fixed markdown container to ensure the button renders correctly in the left grid cell
+    col_user, col_logout = st.columns([2, 1])
     
-    # User Icon and ID
+    st.markdown('<div class="header-actions-left">', unsafe_allow_html=True) # Open the left action container
+
+    # User Icon and ID (Rendered in the main stream inside the fixed container)
     st.markdown(f'''
         <div class="user-box">
             <div class="user-avatar">👤</div>
@@ -141,7 +146,7 @@ def dashboard(username):
         </div>
     ''', unsafe_allow_html=True)
     
-    # Logout Button
+    # Logout Button (Rendered directly in the main stream inside the fixed container)
     if st.button("Logout", key="header_logout"):
         st.session_state.logged_in = False
         st.session_state.current_user = ""
