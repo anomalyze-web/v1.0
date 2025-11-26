@@ -104,7 +104,7 @@ def show_new_case_selector():
 def dashboard(username):
     st.set_page_config(page_title="Anomalyze Dashboard", layout="wide")
     
-    # CONSOLIDATED CSS BLOCK (All styles in one robust injection)
+    # CORE CSS BLOCK (Fixed elements, general styles)
     st.markdown(f"""
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 <style>
@@ -201,7 +201,6 @@ body, [data-testid="stAppViewContainer"] {{background: #001928 !important;}}
 }}
 [data-testid="stButton"][key="header_logout"] button:hover {{background-color: #e57373;}}
 
-/* --- Utility Styles (Moved from failing blocks) --- */
 .main .block-container {{
     padding-top: 180px !important;
     padding-left: 40px;
@@ -210,8 +209,6 @@ body, [data-testid="stAppViewContainer"] {{background: #001928 !important;}}
     max-width: 100% !important;
 }}
 
-/* Note: The following section-header and placeholder-box styles are best handled via stylable_container below, 
-but are included here for completeness in the event the environment doesn't support stylable_container fully. */
 .section-header {{
     font-size: 1.8rem;
     font-weight: 700;
@@ -235,13 +232,9 @@ but are included here for completeness in the event the environment doesn't supp
     margin-top: 0;
     color: #fff;
 }}
-
 </style>
 """, unsafe_allow_html=True)
     
-    # DELETED: main_container_styles injection (now in consolidated block)
-    # DELETED: section_header_styles injection (now in consolidated block)
-
     if "page" not in st.session_state:
         st.session_state.page = "main"
     if "form_submitted" not in st.session_state:
