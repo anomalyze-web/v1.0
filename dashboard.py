@@ -107,28 +107,89 @@ def dashboard(username):
     st.markdown("""
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 <style>
-/* Ensure the body and main app container have no initial margin/padding pushing content down */
-[data-testid="stAppViewContainer"] {
-    margin-top: 0 !important;
-    padding-top: 0 !important;
-}
-.main .block-container {padding-top: 180px !important;padding-left: 40px;padding-right: 40px;padding-bottom: 40px;max-width: 100% !important;}
+/* Reset and Global Styles */
+[data-testid="stAppViewContainer"] {margin-top: 0 !important; padding-top: 0 !important;}
 body, [data-testid="stAppViewContainer"] {background: #001928 !important;}
-#fixed-header-container {position: fixed;left: 0;top: 0;width: 100%;z-index: 10;padding: 0 40px;background: #15425b;box-shadow: 0 4px 12px rgba(0,0,0,0.3);}
-.fixed-header-content {height: 120px;display: flex;align-items: center;}
-.dashboard-title {font-size: 2rem;font-weight: 700;color: #fff; text-align: center; margin: 0;}
-.user-actions {display: flex;align-items: center;gap: 16px;margin-left: auto;}
-.user-box {font-size: 1.2rem;font-weight: 600;color: #fff;display: flex;align-items: center;gap: 8px; margin: 0;}
-.user-avatar {width: 36px;height: 36px;background: #367588;border-radius: 50%;display: flex;align-items: center;justify-content: center;font-size: 1.2rem;color: #fff;}
-#fixed-nav-container {position: fixed;top: 120px;left: 0;width: 100%;z-index: 9;background-color: #001928;padding: 10px 40px;box-shadow: 0 2px 5px rgba(0,0,0,0.3);}
-.main-nav-button button {background-color: #1c4868 !important;color: white;border: 2px solid #61a3cd !important;border-radius: 8px;font-size: 1.05rem;font-weight: 600;width: 100%;height: 40px;margin: 0;transition: all 0.2s;}
-.main-nav-button button:hover {background-color: #367588 !important;border-color: #fff !important;}
-.dashboard-main {padding-top: 20px;}
-.section-header {font-size: 1.8rem;font-weight: 700;color: #3a7ba4 !important;margin-top: 30px;margin-bottom: 15px;border-bottom: 2px solid #367588;padding-bottom: 5px;}
-.placeholder-box {background: #15425b;color: #99aab5;padding: 20px;border-radius: 12px;margin-bottom: 20px;box-shadow: 0 2px 8px rgba(0,0,0,0.15);}
-.placeholder-box h4 {margin-top: 0;color: #fff;}
-[data-testid="stSidebar"] {display: none !important;}
-[data-testid="stSidebarContent"] {display: none !important;}
+[data-testid="stSidebar"], [data-testid="stSidebarContent"] {display: none !important;}
+
+/* --- FIXED HEADER (TOP BAR) --- */
+#fixed-header-container {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    z-index: 10;
+    padding: 0 40px;
+    background: #15425b; /* Requested Color */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    height: 120px; /* Requested Height */
+    display: flex;
+    align-items: center;
+}
+.fixed-header-content {
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+.dashboard-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #fff;
+    text-align: center;
+    margin: 0;
+    line-height: 1.2;
+}
+.user-box {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.user-avatar {
+    width: 36px;
+    height: 36px;
+    background: #367588;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: #fff;
+}
+
+/* --- FIXED NAVIGATION BAR --- */
+#fixed-nav-container {
+    position: fixed;
+    top: 120px; /* Starts exactly below the 120px header */
+    left: 0;
+    width: 100%;
+    z-index: 9;
+    background-color: #001928; 
+    padding: 10px 40px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+/* Navigation Button Styles */
+.main-nav-button button {
+    background-color: #1c4868 !important;
+    color: white;
+    border: 2px solid #61a3cd !important;
+    border-radius: 8px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    width: 100%;
+    height: 40px;
+    margin: 0;
+    transition: all 0.2s;
+}
+.main-nav-button button:hover {
+    background-color: #367588 !important;
+    border-color: #fff !important;
+}
+
+/* Logout Button (Sized to match nav buttons) */
 [data-testid="stButton"][key="header_logout"] button {
     background-color: #367588;
     color: white;
@@ -143,6 +204,20 @@ body, [data-testid="stAppViewContainer"] {background: #001928 !important;}
     border: none;
 }
 [data-testid="stButton"][key="header_logout"] button:hover {background-color: #e57373;}
+
+/* --- MAIN CONTENT PADDING --- */
+/* Push the main content down below the 120px header and ~60px nav bar */
+.main .block-container {
+    padding-top: 180px !important;
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-bottom: 40px;
+    max-width: 100% !important;
+}
+
+.section-header {font-size: 1.8rem;font-weight: 700;color: #3a7ba4 !important;margin-top: 30px;margin-bottom: 15px;border-bottom: 2px solid #367588;padding-bottom: 5px;}
+.placeholder-box {background: #15425b;color: #99aab5;padding: 20px;border-radius: 12px;margin-bottom: 20px;box-shadow: 0 2px 8px rgba(0,0,0,0.15);}
+.placeholder-box h4 {margin-top: 0;color: #fff;}
 </style>
 """, unsafe_allow_html=True)
     
@@ -154,6 +229,8 @@ body, [data-testid="stAppViewContainer"] {background: #001928 !important;}
     st.markdown('<div id="fixed-header-container">', unsafe_allow_html=True)
     st.markdown('<div class="fixed-header-content">', unsafe_allow_html=True)
 
+    # Header Layout: Account (Left) | Dashboard (Center) | Logout (Right)
+    # Using specific column ratios to help center the title
     user_col, title_col, logout_col = st.columns([2, 6, 2])
 
     with user_col:
@@ -169,11 +246,14 @@ body, [data-testid="stAppViewContainer"] {background: #001928 !important;}
 
 
     with logout_col:
+        # Style the container to push the button to the far right
+        st.markdown('<div style="width: 100%; display: flex; justify-content: flex-end; align-items: center;">', unsafe_allow_html=True)
         if st.button("Logout", key="header_logout"):
             st.session_state.logged_in = False
             st.session_state.current_user = ""
             st.session_state.page = "main"
             st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown('</div>', unsafe_allow_html=True) 
     st.markdown('</div>', unsafe_allow_html=True) 
@@ -281,3 +361,4 @@ body, [data-testid="stAppViewContainer"] {background: #001928 !important;}
             st.session_state.remarks
         )
 
+    st.markdown('</div>', unsafe_allow_html=True)
