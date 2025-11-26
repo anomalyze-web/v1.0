@@ -39,12 +39,10 @@ def dashboard_css():
         box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         padding: 0 20px;
         
-        /* GRID Layout: 3 equal parts for stability */
+        /* GRID Layout: 3 sections (Left Actions, Center Title, Right Spacer) */
         display: grid;
-        /* Swap columns: Left actions (auto), Center title (auto), Right space */
-        grid-template-columns: auto auto 1fr; 
+        grid-template-columns: auto 1fr auto; /* Left content, Center space for title, Right space */
         align-items: center;
-        gap: 20px; /* Space between left actions and center title */
     }
     
     /* Dashboard Title Styling (Centered in the middle grid cell) */
@@ -54,6 +52,7 @@ def dashboard_css():
         color: #fff;
         text-align: center;
         white-space: nowrap;
+        margin: 0; /* Important to remove default margin from Streamlit's wrapping element */
     }
 
     /* Left Side Actions Styling */
@@ -92,8 +91,8 @@ def dashboard_css():
         border-radius: 8px;
         font-size: 0.9rem;
         font-weight: 600;
-        width: fit-content; /* Make button only as wide as the content */
-        min-width: unset; /* Override Streamlit minimum width */
+        width: fit-content; 
+        min-width: unset; 
         padding: 5px 10px;
         height: 30px;
         transition: background-color 0.2s;
@@ -127,7 +126,7 @@ def dashboard(username):
     # --- Fixed Header (Title Bar with User/Logout) ---
     st.markdown('<div id="fixed-header-container">', unsafe_allow_html=True)
     
-    # 1. Left Actions (User Icon, ID, and Logout Button)
+    # Left Content (User Icon, ID, and Logout Button)
     st.markdown('<div class="header-actions-left">', unsafe_allow_html=True)
     
     # User Icon and ID
@@ -147,11 +146,11 @@ def dashboard(username):
 
     st.markdown('</div>', unsafe_allow_html=True) # Close header-actions-left
     
-    # 2. Dashboard Title (Centered)
-    st.markdown('<div class="dashboard-title-text">Dashboard</div>', unsafe_allow_html=True)
+    # Center Content (Dashboard Title)
+    # This element is designed to take the central space in the grid
+    st.markdown('<div class="dashboard-title-text" style="grid-column: 2;">Dashboard</div>', unsafe_allow_html=True)
     
-    # 3. Right Spacer (Blank)
-    # The grid structure provides the third column automatically for spacing
+    # Right Spacer (Automatic 3rd Grid Column)
     
     st.markdown('</div>', unsafe_allow_html=True) # Close fixed-header-container
 
