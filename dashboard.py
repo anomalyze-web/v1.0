@@ -107,15 +107,15 @@ def dashboard(username):
     st.markdown("""
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 <style>
-.main .block-container {padding-top: 140px !important;padding-left: 40px;padding-right: 40px;padding-bottom: 40px;max-width: 100% !important;}
+.main .block-container {padding-top: 160px !important;padding-left: 40px;padding-right: 40px;padding-bottom: 40px;max-width: 100% !important;}
 body, [data-testid="stAppViewContainer"] {background: #001928 !important;}
 #fixed-header-container {position: fixed;left: 0;top: 0;width: 100%;z-index: 10;padding: 0 40px;background: #15425b;box-shadow: 0 4px 12px rgba(0,0,0,0.3);}
-.fixed-header-content {height: 60px;display: flex;align-items: center;}
-.dashboard-title {font-size: 2rem;font-weight: 700;color: #fff; text-align: center; line-height: 60px; height: 60px; margin: 0;}
+.fixed-header-content {height: 80px;display: flex;align-items: center;}
+.dashboard-title {font-size: 2rem;font-weight: 700;color: #fff; text-align: center; margin: 0;}
 .user-actions {display: flex;align-items: center;gap: 16px;margin-left: auto;}
-.user-box {font-size: 1.2rem;font-weight: 600;color: #fff;display: flex;align-items: center;gap: 8px; line-height: 60px; height: 60px; margin: 0;}
+.user-box {font-size: 1.2rem;font-weight: 600;color: #fff;display: flex;align-items: center;gap: 8px; margin: 0;}
 .user-avatar {width: 36px;height: 36px;background: #367588;border-radius: 50%;display: flex;align-items: center;justify-content: center;font-size: 1.2rem;color: #fff;}
-#fixed-nav-container {position: fixed;top: 60px;left: 0;width: 100%;z-index: 9;background-color: #001928;padding: 10px 40px;box-shadow: 0 2px 5px rgba(0,0,0,0.3);}
+#fixed-nav-container {position: fixed;top: 80px;left: 0;width: 100%;z-index: 9;background-color: #001928;padding: 10px 40px;box-shadow: 0 2px 5px rgba(0,0,0,0.3);}
 .main-nav-button button {background-color: #1c4868 !important;color: white;border: 2px solid #61a3cd !important;border-radius: 8px;font-size: 1.05rem;font-weight: 600;width: 100%;height: 40px;margin: 0;transition: all 0.2s;}
 .main-nav-button button:hover {background-color: #367588 !important;border-color: #fff !important;}
 .dashboard-main {padding-top: 20px;}
@@ -128,8 +128,8 @@ body, [data-testid="stAppViewContainer"] {background: #001928 !important;}
     background-color: #367588;
     color: white;
     border-radius: 8px;
-    font-size: 0.5rem;
-    font-weight: 300;
+    font-size: 1.0rem;
+    font-weight: 600;
     width: 100px; 
     padding: 8px 15px;
     height: 40px;
