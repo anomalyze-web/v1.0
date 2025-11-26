@@ -67,7 +67,7 @@ def check_user(username, password):
 
 st.set_page_config(page_title="Anomalyze Login", layout="wide")
 
-# --- CUSTOM CSS FOR LOGIN/SIGNUP PAGE (V4 Layout and Color Palette) ---
+# --- CUSTOM CSS FOR LOGIN/SIGNUP PAGE (V5 Layout and Color Palette) ---
 st.markdown("""
 <style>
 /* Main Background Color: #15425b */
@@ -79,16 +79,14 @@ body, [data-testid="stAppViewContainer"], .main {
 .left-panel-custom {
     background-color: #367588; /* Dark Turquoise/Teal */
     border-radius: 24px;
-    /* Removed fixed padding and used a combination of padding and min-height 
-       to visually match the form's height up to the "Create account" button */
+    /* This padding and min-height combination targets visual alignment with the form */
     padding: 70px 30px; 
     width: 100%; 
     box-shadow: 0 8px 40px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
     justify-content: center; /* Center content vertically */
-    /* Estimated height based on form elements, slightly adjusted */
-    min-height: 480px; 
+    min-height: 480px; /* Adjusted height to match form visually */
     animation: fadeIn 1.2s ease;
     opacity: 0.95;
 }
@@ -97,9 +95,9 @@ body, [data-testid="stAppViewContainer"], .main {
     to { opacity: 0.95; transform: translateY(0);}
 }
 
-/* Left Panel Title - Text Color changed to WHITE for visibility */
+/* Left Panel Title - Text Color changed to #15425b (Dark Blue) for visibility on Turquoise background */
 .left-panel-title {
-    color: #FFFFFF; /* Changed to white for visibility on dark turquoise background */
+    color: #15425b; /* Changed back to dark blue as requested */
     font-size: 5rem; /* Adjusted font size to better fit the box */
     font-weight: bold;
     text-align: center;
@@ -209,6 +207,7 @@ def login_signup_ui():
     with c_welcome:
         # Left Panel (Welcome)
         st.markdown('<div class="left-panel-custom">', unsafe_allow_html=True)
+        # Title is now correctly inside the custom div in the column, and its CSS color is set to #15425b
         st.markdown('<div class="left-panel-title">Welcome to<br>Anomalyze!</div>', unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
         
