@@ -115,101 +115,108 @@ def show_new_case_selector():
                 st.rerun()
 
 def inject_css():
-    st.markdown("""
-    <style>
-    [data-testid="stAppViewContainer"] {margin-top:0 !important; padding-top:0 !important;}
-    body, [data-testid="stAppViewContainer"] {background:#001928 !important;}
-    [data-testid="stSidebar"], [data-testid="stSidebarContent"] {display:none !important;}
+    css_code = """
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<style>
+/* Reset and Global Styles */
+[data-testid="stAppViewContainer"] {margin-top:0 !important; padding-top:0 !important;}
+body, [data-testid="stAppViewContainer"] {background:#001928 !important;}
+[data-testid="stSidebar"], [data-testid="stSidebarContent"] {display:none !important;}
 
-    #fixed-header-container {
-        position:fixed;
-        left:0;
-        top:0;
-        width:100%;
-        z-index:10;
-        padding:0 40px;
-        background:#15425b;
-        box-shadow:0 4px 12px rgba(0,0,0,0.3);
-        height:120px;
-        display:flex;
-        align-items:center;
-    }
+/* Fixed Header Container */
+#fixed-header-container {
+    position:fixed;
+    left:0;
+    top:0;
+    width:100%;
+    z-index:10;
+    padding:0 40px;
+    background:#15425b; 
+    box-shadow:0 4px 12px rgba(0,0,0,0.3);
+    height:120px; 
+    display:flex;
+    align-items:center;
+}
+.fixed-header-content {
+    width:100%;
+    display:flex;
+    align-items:center;
+}
+.dashboard-title {
+    font-size:2.5rem;
+    font-weight:700;
+    color:#fff;
+    text-align:center;
+    margin:0;
+    line-height:1.2;
+}
+.user-box {
+    font-size:1.2rem;
+    font-weight:600;
+    color:#fff;
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+.user-avatar {
+    width:36px;
+    height:36px;
+    background:#367588;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.2rem;
+    color:#fff;
+}
 
-    .fixed-header-content {display:flex; width:100%; align-items:center;}
+/* Fixed Navigation Container */
+#fixed-nav-container {
+    position:fixed;
+    top:120px; 
+    left:0;
+    width:100%;
+    z-index:9;
+    background-color:#001928; 
+    padding:10px 40px;
+    box-shadow:0 2px 5px rgba(0,0,0,0.3);
+}
 
-    .dashboard-title {
-        font-size:2.5rem;
-        font-weight:700;
-        color:#fff;
-        text-align:center;
-        margin:0;
-        line-height:1.2;
-    }
+/* Main Navigation Buttons (used by stylable_container) */
+.main-nav-button button {
+    background-color:#1c4868 !important;
+    color:white;
+    border:2px solid #61a3cd !important;
+    border-radius:8px;
+    font-size:1.05rem;
+    font-weight:600;
+    width:100%;
+    height:40px;
+    margin:0;
+    transition:all 0.2s;
+}
+.main-nav-button button:hover {
+    background-color:#367588 !important;
+    border-color:#fff !important;
+}
 
-    .user-box {
-        font-size:1.2rem;
-        font-weight:600;
-        color:#fff;
-        display:flex;
-        align-items:center;
-        gap:8px;
-    }
+/* Header Logout Button (Targeted by key) */
+[data-testid="stButton"][key="header_logout"] button {
+    background-color:#367588;
+    color:white;
+    border-radius:8px;
+    font-size:1.0rem;
+    font-weight:600;
+    width:100px; 
+    padding:8px 15px;
+    height:40px;
+    margin:0;
+    transition:background-color 0.2s;
+    border:none;
+}
+[data-testid="stButton"][key="header_logout"] button:hover {background-color:#e57373;}
 
-    .user-avatar {
-        width:36px;
-        height:36px;
-        background:#367588;
-        border-radius:50%;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        font-size:1.2rem;
-    }
-
-    #fixed-nav-container {
-        position:fixed;
-        top:120px;
-        left:0;
-        width:100%;
-        z-index:9;
-        background:#001928;
-        padding:10px 40px;
-        box-shadow:0 2px 5px rgba(0,0,0,0.3);
-    }
-
-    .main .block-container {
-        padding-top:180px !important;
-        padding-left:40px;
-        padding-right:40px;
-        padding-bottom:40px;
-        max-width:100% !important;
-    }
-
-    .section-header {
-        font-size:1.8rem;
-        font-weight:700;
-        color:#3a7ba4 !important;
-        margin-top:30px;
-        margin-bottom:15px;
-        border-bottom:2px solid #367588;
-        padding-bottom:5px;
-    }
-
-    .placeholder-box {
-        background:#15425b;
-        color:#99aab5;
-        padding:20px;
-        border-radius:12px;
-        margin-bottom:20px;
-        box-shadow:0 2px 8px rgba(0,0,0,0.15);
-    }
-
-    .placeholder-box h4 {color:#fff;}
-    </style>
-    """, unsafe_allow_html=True)
-
-
-/* Fix from Screenshot 2025-11-27 at 4.23.42 AM.jpg */
+/* Main Content Area Padding - Accounts for fixed header/nav (120px + 50px buffer) */
 .main .block-container {
     padding-top:180px !important;
     padding-left:40px;
@@ -217,6 +224,8 @@ def inject_css():
     padding-bottom:40px;
     max-width:100% !important;
 }
+
+/* Section Headers (e.g., Bookmarked Cases, Recent Activity) */
 .section-header {
     font-size:1.8rem;
     font-weight:700;
@@ -226,6 +235,8 @@ def inject_css():
     border-bottom:2px solid #367588;
     padding-bottom:5px;
 }
+
+/* Placeholder Boxes (e.g., No bookmarked cases) */
 .placeholder-box {
     background:#15425b;
     color:#99aab5;
@@ -239,13 +250,14 @@ def inject_css():
     color:#fff;
 }
 </style>
-""", unsafe_allow_html=True)
+"""
+    st.markdown(css_code, unsafe_allow_html=True)
 
 
 def dashboard(username):
     st.set_page_config(page_title="Anomalyze Dashboard", layout="wide")
     
-    # 1. CSS INJECTION BLOCK (Guaranteed to run before content)
+    # 1. CSS INJECTION BLOCK (Must be called first)
     inject_css()
     
     # 2. Session State Initialization
