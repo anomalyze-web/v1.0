@@ -2,25 +2,19 @@ import streamlit as st
 import base64
 from streamlit_extras.stylable_container import stylable_container
 
-# Import the analysis modules
-# NOTE: These modules (CDR_analysis, etc.) must exist in your project directory
 from CDR_analysis import show_cdr_analysis
 from IPDR_analysis import show_ipdr_analysis
 from FIREWALL_analysis import show_firewall_analysis
 from CO_Relation_analysis import show_correlation_analysis
 
-# --- Helper Functions (Page Views) ---
-
 def show_evidence_library():
     """Placeholder screen for Evidence Library."""
     st.title("Evidence Library")
     st.markdown("---")
-    # Added back button for navigation flow
     if st.button("⬅ Back to Dashboard"):
         st.session_state.page = "main"
         st.rerun()
 
-    # NOTE: These lines were previously unindented, causing the error.
     st.text_input("Search Evidence Library", placeholder="Enter keywords, hash values, or file names...")
     st.markdown('<div style="margin-top: 50px; padding: 30px; border: 1px dashed #555; border-radius: 10px; color: #aaa; text-align: center;">\
     <h3>No Evidence Uploaded Yet</h3>\
@@ -31,12 +25,10 @@ def show_search_cases():
     """Placeholder screen for Search Cases."""
     st.title("Search Historical Cases")
     st.markdown("---")
-    # Added back button for navigation flow
     if st.button("⬅ Back to Dashboard"):
         st.session_state.page = "main"
         st.rerun()
 
-    # NOTE: These lines were previously unindented, causing the error.
     st.text_input("Search Cases", placeholder="Enter case number, investigator name, or keywords...")
     st.markdown('<div style="margin-top: 50px; padding: 30px; border: 1px dashed #555; border-radius: 10px; color: #aaa; text-align: center;">\
     <h3>No Cases Archived</h3>\
@@ -47,12 +39,10 @@ def show_legal_reference():
     """Placeholder screen for Legal Reference."""
     st.title("Legal Reference and Standards")
     st.markdown("---")
-    # Added back button for navigation flow
     if st.button("⬅ Back to Dashboard"):
         st.session_state.page = "main"
         st.rerun()
 
-    # NOTE: This line was previously unindented, causing the error.
     st.markdown('<div style="padding: 30px; border: 1px dashed #555; border-radius: 10px; color: #aaa;">\
     <p>This section is reserved for relevant legal statutes, compliance documentation, and digital forensics standards.</p>\
     <p>Content to be integrated...</p>\
@@ -60,17 +50,14 @@ def show_legal_reference():
 
 def show_new_case_selector():
     """Selector for the specific type of case data to be uploaded."""
-    # NOTE: All content inside this function was previously unindented, causing the error.
     st.markdown(f"### Select Data Type for New Case:")
 
     col1, col2, col3, col4 = st.columns(4)
 
-    # Back button for navigation flow
     if st.button("⬅ Back to Dashboard"):
         st.session_state.page = "main"
         st.rerun()
 
-    # Updated button style for selector screen: #1c4868 background, #61a3cd border/outline
     selector_button_style = """
     button {
     background-color: #1c4868 !important;
@@ -117,8 +104,6 @@ def show_new_case_selector():
                 st.session_state.page = "correlation"
                 st.session_state.form_submitted = False
                 st.rerun()
-
-# --- CSS and Core Function ---
 
 def dashboard_css():
     st.markdown("""
@@ -273,18 +258,17 @@ def dashboard(username):
     st.set_page_config(page_title="Anomalyze Dashboard", layout="wide")
     dashboard_css()
 
-    # --- Session State Initialization ---
+    
     if "page" not in st.session_state:
         st.session_state.page = "main"
     if "form_submitted" not in st.session_state:
         st.session_state.form_submitted = False
 
-    # --- Fixed Header (Title, User ID, Logout) ---
-    # Wrap in a DIV with the fixed-header-container ID
+    
     st.markdown('<div id="fixed-header-container">', unsafe_allow_html=True)
     st.markdown('<div class="fixed-header-content">', unsafe_allow_html=True)
 
-    # Header Content Layout using Streamlit columns
+    
     title_col, spacer_col, user_col, logout_col = st.columns([2, 5, 2, 1.5])
 
     with title_col:
@@ -305,17 +289,16 @@ def dashboard(username):
             st.session_state.page = "main"
             st.rerun()
 
-    st.markdown('</div>', unsafe_allow_html=True) # Close fixed-header-content
-    st.markdown('</div>', unsafe_allow_html=True) # Close fixed-header-container
+    st.markdown('</div>', unsafe_allow_html=True) 
+    st.markdown('</div>', unsafe_allow_html=True) 
 
-    # --- Fixed Navigation Bar (Main Buttons) ---
-    # Wrap in a DIV with the fixed-nav-container ID
+    
     st.markdown('<div id="fixed-nav-container">', unsafe_allow_html=True)
 
-    # Columns for navigation, ensuring equal width
+    
     nav_col1, nav_col2, nav_col3, nav_col4 = st.columns(4)
 
-    # Function to create a nav button with common styling
+    
     def nav_button(label, key, target_page, col):
         with col:
             with stylable_container(f"nav_button_{key}", css_styles=".main-nav-button"):
@@ -323,16 +306,16 @@ def dashboard(username):
                     st.session_state.page = target_page
                     st.rerun()
 
-    # Navigation Buttons
+    
     nav_button("New Case", "nav_new_case", "new_case_selector", nav_col1)
     nav_button("Evidence Library", "nav_evidence", "evidence_library", nav_col2)
     nav_button("Search Cases", "nav_search", "search_cases", nav_col3)
     nav_button("Legal Reference", "nav_legal", "legal_reference", nav_col4)
 
-    st.markdown('</div>', unsafe_allow_html=True) # Close fixed-nav-container
+    st.markdown('</div>', unsafe_allow_html=True) 
 
 
-    # --- Main Content Router ---
+    
     st.markdown('<div class="dashboard-main">', unsafe_allow_html=True)
 
     if st.session_state.page == "main":
@@ -342,11 +325,11 @@ def dashboard(username):
         st.markdown('<h2 class="section-header">Recent Activity</h2>', unsafe_allow_html=True)
         st.markdown('<div class="placeholder-box"><h4>No recent cases analyzed.</h4><p>Start a new case using the "New Case" button above to begin your analysis.</p></div>', unsafe_allow_html=True)
 
-    # New Case Selector (Replaces the old CDR/IPDR buttons)
+    
     elif st.session_state.page == "new_case_selector":
         show_new_case_selector()
 
-    # Placeholder Pages
+    
     elif st.session_state.page == "evidence_library":
         show_evidence_library()
     elif st.session_state.page == "search_cases":
@@ -354,11 +337,11 @@ def dashboard(username):
     elif st.session_state.page == "legal_reference":
         show_legal_reference()
 
-    # FORM PAGES (The original CDR/IPDR upload forms)
+    
     elif st.session_state.page in ["cdr", "ipdr", "firewall", "correlation"]:
         st.markdown(f"### Uploading **{st.session_state.page.upper()}** Case")
 
-        # Back button to return to the New Case Selector
+        
         if st.button("⬅ Back to New Case Selection"):
             st.session_state.page = "new_case_selector"
             st.session_state.form_submitted = False
@@ -380,7 +363,7 @@ def dashboard(username):
                 st.session_state.case_name = case_name
                 st.session_state.remarks = remarks
 
-        # Show the "Start Analysis" button only after successful submit
+        
         if st.session_state.form_submitted:
             analysis_labels = {
                 "cdr": "Start CDR Analysis",
@@ -394,7 +377,7 @@ def dashboard(username):
                 st.session_state.form_submitted = False
                 st.rerun()
 
-    # ANALYSIS PAGES (imported from separate files)
+    
     elif st.session_state.page == "cdr_analysis":
         show_cdr_analysis(
             st.session_state.case_number,
