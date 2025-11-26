@@ -138,7 +138,6 @@ body,[data-testid="stAppViewContainer"]{background:#001928!important;}
     height:120px;
     display:flex;
     flex-direction:column;
-    /* CHANGE: align content to the top */
     justify-content:flex-start; 
 }
 /* Top row for User/Title/Logout */
@@ -146,9 +145,9 @@ body,[data-testid="stAppViewContainer"]{background:#001928!important;}
     width:100%;
     display:flex;
     align-items:center;
-    /* CHANGE: Give top padding to push content slightly down, centering it within its row */
     height: 60px; 
-    padding-top: 5px; 
+    /* NEW: Removed padding-top and added negative margin to push content up */
+    margin-top: -10px; 
 }
 /* Bottom row for Navigation Buttons */
 .fixed-nav-row{
@@ -157,6 +156,8 @@ body,[data-testid="stAppViewContainer"]{background:#001928!important;}
     align-items:center;
     height: 60px;
     padding-bottom: 5px;
+    /* NEW: Added slight margin top to adjust below the pushed-up top row */
+    margin-top: -10px; 
 }
 
 /* Adjusted title font size and margin to fit the header */
