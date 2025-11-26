@@ -100,7 +100,7 @@ def dashboard_css():
     /* 1. Global Background and Padding */
     .main .block-container {
         /* This prevents Streamlit's default padding from creating unnecessary space */
-        padding-top: 150px !important; /* Adjusted top padding for new header height */
+        padding-top: 150px !important; /* Adjusted top padding for fixed header and nav */
         padding-left: 40px;
         padding-right: 40px;
         padding-bottom: 40px;
@@ -162,26 +162,18 @@ def dashboard_css():
         color: #fff;
     }
     
-    /* 4. Top Navigation Buttons */
-    .top-nav-button {
-        background-color: #367588; /* Dark Teal */
-        color: white;
-        border: none;
-        padding: 12px 20px;
-        margin-right: 15px;
-        border-radius: 8px;
-        font-size: 1.05rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: background-color 0.2s;
+    /* 4. Top Navigation Bar (Positioned immediately below the fixed header) */
+    .nav-bar-container {
+        position: fixed;
+        top: 100px; /* Right below the 100px header */
+        left: 0;
+        width: 100%;
+        background-color: #001928; /* Matches background for seamless look */
+        padding: 10px 40px;
+        z-index: 9; /* Slightly lower than header */
+        box-shadow: 0 2px 5px rgba(0,0,0,0.3);
     }
-    .top-nav-button:hover {
-        background-color: #4c8a99;
-    }
-    .top-nav-button.active {
-        background-color: #15425b; /* Active state is header color */
-    }
-
+    
     /* 5. Main Content Area */
     .dashboard-main {
         padding-top: 20px;
@@ -219,7 +211,6 @@ def dashboard_css():
     """, unsafe_allow_html=True)
 
 def dashboard(username):
-    # Set page config here to ensure the wide layout sticks
     st.set_page_config(page_title="Anomalyze Dashboard", layout="wide")
     dashboard_css()
 
@@ -229,9 +220,7 @@ def dashboard(username):
     if "form_submitted" not in st.session_state:
         st.session_state.form_submitted = False
 
-    # --- Header and Navigation ---
-    
-    # 1. Header (Fixed position)
+    # --- Header (Fixed position) ---
     st.markdown(f'''
         <div class="dashboard-header">
             <div class="dashboard-title">Anomalyze</div>
@@ -241,46 +230,71 @@ def dashboard(username):
                     {username.upper()}
                     <div class="user-avatar">👤</div>
                 </div>
-                
             </div>
         </div>
     ''', unsafe_allow_html=True)
     
-    # 2. Top Navigation Bar (Just below the header)
+    # --- Navigation Bar (Fixed position right below the header) ---
+    st.markdown('<div class="nav-bar-container">', unsafe_allow_html=True)
     
-    # Use st.container to wrap the navigation buttons and ensure they are flush
-    with st.container():
-        # Spacer is now handled by the main content padding, but we still need one for the fixed header height
-        st.markdown('<div style="height: 70px;"></div>', unsafe_allow_html=True) # Spacer
-        
-        # Use columns for navigation and the logout button, ensuring the logout button column is small
-        nav_col1, nav_col2, nav_col3, nav_col4, nav_col_spacer, nav_col_logout = st.columns([1, 1, 1, 1, 2.5, 0.5])
+    # Define columns within the fixed navigation container
+    nav_col1, nav_col2, nav_col3, nav_col4, nav_col_spacer, nav_col_logout = st.columns([1, 1, 1, 1, 3.5, 0.5])
 
-        # Function to create a nav button
-        def nav_button(label, key, target_page, col):
-            # is_active logic can be added here if needed, but for simplicity, we use basic buttons
-            with col:
+    # Function to create a nav button
+    def nav_button(label, key, target_page, col):
+        with col:
+            # Apply styling to the button container to control its appearance
+            with stylable_container(f"nav_button_{key}", css_styles="""
+                button {
+                    background-color: #367588; 
+                    color: white;
+                    border-radius: 8px;
+                    font-size: 1.05rem;
+                    font-weight: 600;
+                    width: 100%;
+                    height: 40px; /* Reduced height for nav bar */
+                    margin: 0;
+                    transition: background-color 0.2s;
+                }
+                button:hover {
+                    background-color: #4c8a99;
+                }
+            """):
                 if st.button(label, key=key, help=f"Go to {label}"):
                     st.session_state.page = target_page
                     st.rerun()
 
-        # Navigation Buttons
-        with nav_col1:
-            if st.button("New Case", key="nav_new_case"):
-                st.session_state.page = "new_case_selector"
-                st.rerun()
+    # Navigation Buttons
+    nav_button("New Case", "nav_new_case", "new_case_selector", nav_col1)
+    nav_button("Evidence Library", "nav_evidence", "evidence_library", nav_col2)
+    nav_button("Search Cases", "nav_search", "search_cases", nav_col3)
+    nav_button("Legal Reference", "nav_legal", "legal_reference", nav_col4)
 
-        nav_button("Evidence Library", "nav_evidence", "evidence_library", nav_col2)
-        nav_button("Search Cases", "nav_search", "search_cases", nav_col3)
-        nav_button("Legal Reference", "nav_legal", "legal_reference", nav_col4)
-
-        # Logout button (now correctly positioned in its own small column)
-        with nav_col_logout:
+    # Logout button (separate style)
+    with nav_col_logout:
+        with stylable_container("logout_button", css_styles="""
+            button {
+                background-color: #367588; 
+                color: white;
+                border-radius: 8px;
+                font-size: 1.0rem;
+                font-weight: 600;
+                width: 100%;
+                height: 40px; 
+                margin: 0;
+                transition: background-color 0.2s;
+            }
+            button:hover {
+                background-color: #e57373; /* Light red hover for danger/logout */
+            }
+        """):
             if st.button("Logout", key="nav_logout"):
                 st.session_state.logged_in = False
                 st.session_state.current_user = ""
                 st.session_state.page = "main"
                 st.rerun()
+                
+    st.markdown('</div>', unsafe_allow_html=True) # Close nav-bar-container
 
 
     # --- Main Content Router ---
