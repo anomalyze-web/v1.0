@@ -7,6 +7,19 @@ from IPDR_analysis import show_ipdr_analysis
 from FIREWALL_analysis import show_firewall_analysis
 from CO_Relation_analysis import show_correlation_analysis
 
+def show_cdr_analysis(case_number, investigator_name, case_name, remarks):
+    st.header("CDR Analysis Page")
+    st.write(f"Case: {case_name}, Investigator: {investigator_name}")
+def show_ipdr_analysis(case_number, investigator_name, case_name, remarks):
+    st.header("IPDR Analysis Page")
+    st.write(f"Case: {case_name}, Investigator: {investigator_name}")
+def show_firewall_analysis(case_number, investigator_name, case_name, remarks):
+    st.header("FIREWALL Analysis Page")
+    st.write(f"Case: {case_name}, Investigator: {investigator_name}")
+def show_correlation_analysis(case_number, investigator_name, case_name, remarks):
+    st.header("CO-RELATION Analysis Page")
+    st.write(f"Case: {case_name}, Investigator: {investigator_name}")
+
 def show_evidence_library():
     st.title("Evidence Library")
     st.markdown("---")
@@ -48,11 +61,11 @@ def show_legal_reference():
 def show_new_case_selector():
     st.markdown(f"### Select Data Type for New Case:")
 
-    col1, col2, col3, col4 = st.columns(4)
-
-    if st.button("⬅ Back to Dashboard"):
+    if st.button("⬅ Back to Dashboard", key="back_to_dash_new_case_sel"):
         st.session_state.page = "main"
         st.rerun()
+
+    col1, col2, col3, col4 = st.columns(4)
 
     selector_button_style = """
     button {
@@ -104,7 +117,6 @@ def show_new_case_selector():
 def dashboard(username):
     st.set_page_config(page_title="Anomalyze Dashboard", layout="wide")
     
-    # FINAL SANITIZED CONSOLIDATED CSS BLOCK 
     st.markdown(f"""
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 <style>
@@ -239,6 +251,10 @@ body, [data-testid="stAppViewContainer"] {{background:#001928 !important;}}
         st.session_state.page = "main"
     if "form_submitted" not in st.session_state:
         st.session_state.form_submitted = False
+    if "logged_in" not in st.session_state:
+        st.session_state.logged_in = True
+    if "current_user" not in st.session_state:
+        st.session_state.current_user = username
 
     st.markdown('<div id="fixed-header-container">', unsafe_allow_html=True)
     st.markdown('<div class="fixed-header-content">', unsafe_allow_html=True)
@@ -262,7 +278,7 @@ body, [data-testid="stAppViewContainer"] {{background:#001928 !important;}}
         if st.button("Logout", key="header_logout"):
             st.session_state.logged_in = False
             st.session_state.current_user = ""
-            st.session_state.page = "main"
+            st.session_state.page = "login"
             st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
 
@@ -291,11 +307,9 @@ body, [data-testid="stAppViewContainer"] {{background:#001928 !important;}}
 
     if st.session_state.page == "main":
         
-        # Bookmarked Cases Section - Using classes defined in the single CSS block
         st.markdown('<h2 class="section-header">Bookmarked Cases</h2>', unsafe_allow_html=True)
         st.markdown('<div class="placeholder-box"><h4>No bookmarked cases available.</h4><p>Use the bookmark feature on case analysis pages to quickly access important investigations.</p></div>', unsafe_allow_html=True)
 
-        # Recent Activity Section - Using classes defined in the single CSS block
         st.markdown('<h2 class="section-header">Recent Activity</h2>', unsafe_allow_html=True)
         st.markdown('<div class="placeholder-box"><h4>No recent cases analyzed.</h4><p>Start a new case using the "New Case" button above to begin your analysis.</p></div>', unsafe_allow_html=True)
 
@@ -341,7 +355,7 @@ body, [data-testid="stAppViewContainer"] {{background:#001928 !important;}}
                 "correlation": "Start CO-RELATION Analysis"
             }
             label = analysis_labels.get(st.session_state.page, "Start Analysis")
-            if st.button(label):
+            if st.button(label, key=f"start_{st.session_state.page}_analysis"):
                 st.session_state.page = f"{st.session_state.page}_analysis"
                 st.session_state.form_submitted = False
                 st.rerun()
