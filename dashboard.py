@@ -1,12 +1,14 @@
 import streamlit as st
-import base64
+# The original code contained commented/unused imports from non-existent local files.
+# I will keep the available imports but remove the ones referencing local files that aren't defined here.
+# from CDR_analysis import show_cdr_analysis
+# from IPDR_analysis import show_ipdr_analysis
+# from FIREWALL_analysis import show_firewall_analysis
+# from CO_Relation_analysis import show_correlation_analysis
+
 from streamlit_extras.stylable_container import stylable_container
 
-from CDR_analysis import show_cdr_analysis
-from IPDR_analysis import show_ipdr_analysis
-from FIREWALL_analysis import show_firewall_analysis
-from CO_Relation_analysis import show_correlation_analysis
-
+# Mock analysis functions based on user's provided structure
 def show_cdr_analysis(case_number, investigator_name, case_name, remarks):
     st.header("CDR Analysis Page")
     st.write(f"Case: {case_name}, Investigator: {investigator_name}")
@@ -116,18 +118,18 @@ def show_new_case_selector():
 
 def inject_css():
     st.markdown('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">', unsafe_allow_html=True)
-    
-    css_code_compressed = """
-<style>
-/* Aggressive reset for browser/Streamlit default margins */
-html, body { margin: 0 !important; padding: 0 !important; }
-/* IMPORTANT: We are explicitly unsetting Streamlit's default padding */
-[data-testid="stAppViewContainer"]{margin-top:0!important;padding-top:0!important;}
-body,[data-testid="stAppViewContainer"]{background:#001928!important;}
-[data-testid="stSidebar"],[data-testid="stSidebarContent"]{display:none!important;}
 
-/* HEADER HEIGHT 60px for a single, stable row */
-#fixed-header-container{
+    css_code_compressed = """
+    <style>
+    /* Aggressive reset for browser/Streamlit default margins */
+    html, body { margin: 0 !important; padding: 0 !important; }
+    /* IMPORTANT: We are explicitly unsetting Streamlit's default padding */
+    [data-testid="stAppViewContainer"]{margin-top:0!important;padding-top:0!important;}
+    body,[data-testid="stAppViewContainer"]{background:#001928!important;}
+    [data-testid="stSidebar"],[data-testid="stSidebarContent"]{display:none!important;}
+
+    /* HEADER HEIGHT 120px to hold two rows (Title/User/Logout + Nav Buttons) */
+    #fixed-header-container{
     position:fixed;
     left:0;
     top:0;
@@ -136,31 +138,35 @@ body,[data-testid="stAppViewContainer"]{background:#001928!important;}
     padding:0 40px;
     background:rgba(21, 66, 91, 0.95); /* INCREASED TRANSPARENCY */
     box-shadow:0 4px 12px rgba(0,0,0,0.3);
-    height:60px; /* FIXED HEIGHT for stability */
+    height:120px;
     display:flex;
-    align-items:center; /* Vertically center content */
-    justify-content:space-between;
-}
+    flex-direction:column;
+    justify-content:flex-start;
+    }
 
-/* Content Row (User/Title/Logout) */
-.fixed-header-content{
+    /* Top row (User/Title/Logout) - SHRINKS TO CONTENT HEIGHT, PINNED TO TOP */
+    .fixed-header-content{
     width:100%;
     display:flex;
-    align-items:center; 
+    justify-content:center;
+    align-items:center; /* CRITICAL: Center items vertically */
     z-index: 100; /* HIGH Z-INDEX to show above header background */
-}
+    position: absolute;
+    top: 0px; /* PINNED to the top of the container */
+    padding-top: 5px; /* Minimal top padding */
+    padding-bottom: 5px;
+    }
 
-/* User Box (Avatar and Username) */
-.user-box {
+    /* User Box (Avatar and Username) */
+    .user-box {
     font-size:1.2rem;
     font-weight:600;
     color:#fff;
     display:flex;
     align-items:center;
     gap:8px;
-    padding-top: 5px; /* Adjusting for alignment */
-}
-.user-avatar {
+    }
+    .user-avatar {
     width:36px;
     height:36px;
     background:#367588;
@@ -170,82 +176,96 @@ body,[data-testid="stAppViewContainer"]{background:#001928!important;}
     justify-content:center;
     font-size:1.2rem;
     color:#fff;
-}
+    }
+    
+    /* LOGOUT LINK STYLE (Replaces the old aggressive button CSS) */
+    [data-testid="stButton"][key="header_logout_link"] button {
+        background: none !important;
+        border: none !important;
+        color: #61a3cd !important; /* Link color */
+        text-decoration: underline;
+        font-size: 1.1rem !important;
+        font-weight: 500 !important;
+        height: auto !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+        transition: color 0.2s;
+        line-height: 1.2;
+        cursor: pointer;
+        /* Ensure it aligns right within its container */
+        justify-content: flex-end;
+    }
+    [data-testid="stButton"][key="header_logout_link"] button:hover {
+        color: #fff !important; /* White on hover */
+        background: none !important;
+        text-decoration: none;
+    }
+    /* Ensure the column container for the link is right-aligned */
+    [data-testid="stButton"][key="header_logout_link"] {
+        display: flex;
+        justify-content: flex-end;
+        width: 100%;
+    }
 
-/* New CSS for Logout Link */
-.logout-link {
-    color: #82c3d6 !important;
-    text-decoration: none;
-    font-size: 1.1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: color 0.2s;
-}
-.logout-link:hover {
-    color: #fff !important;
-    text-decoration: underline;
-}
 
-/* Removed specific styling for Logout Button to make way for link */
-[data-testid="stButton"][key="header_logout"] button {
-    display: none !important;
-}
-
-
-/* Navigation Buttons (Now float directly below the fixed header) */
-.fixed-nav-row{
+    /* Bottom row for Navigation Buttons */
+    .fixed-nav-row{
     width:100%;
     display:flex;
     align-items:center;
     height: 60px;
     padding-bottom: 5px;
-    padding-top: 5px; /* Added padding to separate from top bar */
-    z-index: 50; /* Needs to be visible */
-    background: #001928; /* Same background as main body */
-    position: absolute; /* Needed to place buttons correctly */
-    top: 60px; /* Starts exactly where the header ends */
-}
+    position: absolute;
+    top: 50px; /* ADJUSTED: Starts below the content-sized title row */
+    z-index: 50;
+    }
 
-.dashboard-title{
+    .dashboard-title{
     font-size:1.8rem;
     font-weight:700;
     color:#fff;
     text-align:center;
     margin:0;
-    line-height:1.2; 
-    padding-top: 0px; 
-}
+    line-height:1.2;
+    padding-top: 0px;
+    }
 
-.main-nav-button button{
+    /* Ensure no ghost elements appear (We rely on Python code deleting them now) */
+    .user-box, .user-avatar, [data-testid^="stButton"][key^="header_logout"] {
+    /* Styles needed for user/logout visibility, removed 'display: none !important;' */
+    }
+
+    .main-nav-button button{
     background-color:#1c4868!important;
     color:white!important;
     border:2px solid #61a3cd!important;
     border-radius:8px!important;
     font-size:1.05rem!important;
     font-weight:600!important;
-    width:100%; 
+    width:100%; /* Ensure full width within its column */
     height:40px;
     margin:0;
     transition:all 0.2s;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-}
-.main-nav-button button:hover{background-color:#367588!important;border-color:#fff!important;}
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Added shadow for consistency */
+    }
+    .main-nav-button button:hover{background-color:#367588!important;border-color:#fff!important;}
 
-.main .block-container{padding-top:130px!important;padding-left:40px;padding-right:40px;padding-bottom:40px;max-width:100%!important;}
-.section-header{font-size:1.8rem;font-weight:700;color:#3a7ba4!important;margin-top:30px;margin-bottom:15px;border-bottom:2px solid #367588;padding-bottom:5px;}
-.placeholder-box{background:#15425b;color:#99aab5;padding:20px;border-radius:12px;margin-bottom:20px;box-shadow:0 2px 8px rgba(0,0,0,0.15);}
-.placeholder-box h4{margin-top:0;color:#fff;}
-</style>
-"""
+    .main .block-container{padding-top:130px!important;padding-left:40px;padding-right:40px;padding-bottom:40px;max-width:100%!important;}
+    .section-header{font-size:1.8rem;font-weight:700;color:#3a7ba4!important;margin-top:30px;margin-bottom:15px;border-bottom:2px solid #367588;padding-bottom:5px;}
+    .placeholder-box{background:#15425b;color:#99aab5;padding:20px;border-radius:12px;margin-bottom:20px;box-shadow:0 2px 8px rgba(0,0,0,0.15);}
+    .placeholder-box h4{margin-top:0;color:#fff;}
+    </style>
+    """
     st.markdown(css_code_compressed, unsafe_allow_html=True)
 
 
 def dashboard(username):
     st.set_page_config(page_title="Anomalyze Dashboard", layout="wide")
-    
+
     # 1. CSS INJECTION BLOCK (Must be called first)
     inject_css()
-    
+
     # 2. Session State Initialization
     if "page" not in st.session_state:
         st.session_state.page = "main"
@@ -255,68 +275,37 @@ def dashboard(username):
         st.session_state.logged_in = True
     if "current_user" not in st.session_state:
         st.session_state.current_user = username
-    
-    # --- LOGOUT HANDLER FUNCTION (Triggers rerun for state change) ---
-    # This JS function must be injected via HTML to trigger the Python rerun logic
-    js_logout = """
-        <script>
-        function trigger_logout() {
-            const logoutKey = "stButton:header_logout";
-            const btn = window.parent.document.querySelector('[data-testid="' + logoutKey + '"] button');
-            if (btn) {
-                btn.click();
-            } else {
-                // Fallback: If the button is hidden, force a Streamlit rerun
-                window.parent.document.dispatchEvent(new Event('change'));
-            }
-        }
-        </script>
-    """
-    st.markdown(js_logout, unsafe_allow_html=True)
 
-
-    # 3. FIXED HEADER HTML STRUCTURE (60px tall)
+    # 3. FIXED HEADER HTML STRUCTURE (120px tall)
     st.markdown('<div id="fixed-header-container">', unsafe_allow_html=True)
 
-    # --- TOP ROW: User / Title / Logout ---
+    # --- TOP ROW: User / Title / Logout Link ---
     st.markdown('<div class="fixed-header-content">', unsafe_allow_html=True)
-    
+
     user_col, title_col, logout_col = st.columns([2, 6, 2])
 
     with user_col:
         st.markdown(f'''
-<div class="user-box" style="justify-content: flex-start;">
-<div class="user-avatar">👤</div>
-{username.upper()}
-</div>
-''', unsafe_allow_html=True)
+        <div class="user-box" style="justify-content: flex-start;">
+        <div class="user-avatar">👤</div>
+        {username.upper()}
+        </div>
+        ''', unsafe_allow_html=True)
 
     with title_col:
         st.markdown('<div class="dashboard-title">Anomalyze Dashboard</div>', unsafe_allow_html=True)
 
     with logout_col:
-        st.markdown('<div style="width: 100%; display: flex; justify-content: flex-end; align-items: center;">', unsafe_allow_html=True)
-        
-        # Hidden st.button is used as the Python trigger for logout state change
-        if st.button("Logout", key="header_logout"):
+        # Replaced the aggressively styled button with a button styled as a link via CSS
+        if st.button("Logout", key="header_logout_link"):
             st.session_state.logged_in = False
             st.session_state.current_user = ""
             st.session_state.page = "login"
             st.rerun()
 
-        # Visible text link that calls the JS function to trigger the hidden button
-        st.markdown(
-            '<a href="javascript:void(0);" onclick="trigger_logout()" class="logout-link">Logout</a>',
-            unsafe_allow_html=True
-        )
-
-        st.markdown('</div>', unsafe_allow_html=True)
-
-
     st.markdown('</div>', unsafe_allow_html=True) # Closes fixed-header-content (Top Row)
-    
-    # --- BOTTOM ROW: Navigation Buttons (Now rendered outside the fixed header) ---
-    # The fixed-nav-row is now styled to start at 60px down, effectively becoming the second fixed bar.
+
+    # --- BOTTOM ROW: Navigation Buttons ---
     st.markdown('<div class="fixed-nav-row">', unsafe_allow_html=True)
     nav_col1, nav_col2, nav_col3, nav_col4 = st.columns(4)
 
@@ -333,14 +322,14 @@ def dashboard(username):
     nav_button("Legal Reference", "nav_legal", "legal_reference", nav_col4)
 
     st.markdown('</div>', unsafe_allow_html=True) # Closes fixed-nav-row (Bottom Row)
-    
+
     st.markdown('</div>', unsafe_allow_html=True) # Closes fixed-header-container
 
     # 5. MAIN CONTENT AREA
     st.markdown('<div class="dashboard-main">', unsafe_allow_html=True)
 
     if st.session_state.page == "main":
-        
+
         st.markdown('<h2 class="section-header">Bookmarked Cases</h2>', unsafe_allow_html=True)
         st.markdown('<div class="placeholder-box"><h4>No bookmarked cases available.</h4><p>Use the bookmark feature on case analysis pages to quickly access important investigations.</p></div>', unsafe_allow_html=True)
 
