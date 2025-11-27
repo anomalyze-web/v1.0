@@ -134,7 +134,7 @@ body,[data-testid="stAppViewContainer"]{background:#001928!important;}
     width:100%;
     z-index:10; /* BASE Z-INDEX for the background */
     padding:0 40px;
-    background:rgba(21, 66, 91, 0.3); /* INCREASED TRANSPARENCY */
+    background:rgba(21, 66, 91, 0.95); /* INCREASED TRANSPARENCY */
     box-shadow:0 4px 12px rgba(0,0,0,0.3);
     height:120px;
     display:flex;
@@ -177,22 +177,8 @@ body,[data-testid="stAppViewContainer"]{background:#001928!important;}
     color:#fff;
 }
 
-/* Header Logout Button (Targeted by key) */
-[data-testid="stButton"][key="header_logout"] button {
-    background-color:#367588;
-    color:white;
-    border-radius:8px;
-    font-size:1.0rem;
-    font-weight:600;
-    width:100px; 
-    padding:8px 15px;
-    height:40px;
-    margin:0;
-    transition:background-color 0.2s;
-    border:none;
-}
-[data-testid="stButton"][key="header_logout"] button:hover {background-color:#e57373;}
-
+/* Logout Button will now use .main-nav-button styling for consistency */
+/* Removed specific styling for [data-testid="stButton"][key="header_logout"] button */
 
 /* Bottom row for Navigation Buttons */
 .fixed-nav-row{
@@ -228,7 +214,7 @@ body,[data-testid="stAppViewContainer"]{background:#001928!important;}
     border-radius:8px;
     font-size:1.05rem;
     font-weight:600;
-    width:100%;
+    width:100%; /* Ensure full width within its column */
     height:40px;
     margin:0;
     transition:all 0.2s;
@@ -281,11 +267,13 @@ def dashboard(username):
 
     with logout_col:
         st.markdown('<div style="width: 100%; display: flex; justify-content: flex-end; align-items: center;">', unsafe_allow_html=True)
-        if st.button("Logout", key="header_logout"):
-            st.session_state.logged_in = False
-            st.session_state.current_user = ""
-            st.session_state.page = "login"
-            st.rerun()
+        # Apply the main-nav-button style to the logout button using stylable_container
+        with stylable_container("logout_button", css_styles=".main-nav-button"):
+            if st.button("Logout", key="header_logout"):
+                st.session_state.logged_in = False
+                st.session_state.current_user = ""
+                st.session_state.page = "login"
+                st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
 
 
