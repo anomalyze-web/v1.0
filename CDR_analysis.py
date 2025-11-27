@@ -75,7 +75,7 @@ def show_cdr_analysis(case_number, investigator_name, case_name, remarks, userna
             {"title": "Strange SIM Use", "summary": "Checks for excessive international outgoing calls.", "file": "Strange_sim_use"},
             {"title": "SIM Swapping", "summary": "Detects different IMSIs with same IMEI or new SIMs showing same pattern.", "file": "SIM_Swapping"},
             {"title": "Toll-Free Abuse", "summary": "Detects frequent calls made to toll-free numbers.", "file": "Toll_Free_Abuse"},
-            {"title": "SIM Cloning", "summary": "Same IMSI used simultaneously in distant locations.", "file": "SIM_cloning"},
+            {"title": "SIM Cloning", "summary": "Same IMSI used simultaneously in distant locations.", "file": "SIM_Cloning"},
             {"title": "Unusual Hours", "summary": "Flags calls between 12:00 AM – 6:00 AM.", "file": "Unusual_Call_Hours"},
             {"title": "Scattered Calls", "summary": "Short frequent calls to many numbers.", "file": "Scattered_Calls"},
             {"title": "Repeat Calls", "summary": "Detects repeated call failures and common callees.", "file": "Repeated_Calls"},
