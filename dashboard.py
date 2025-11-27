@@ -115,14 +115,13 @@ def show_new_case_selector():
                 st.rerun()
 
 def inject_css():
-    # The external link is kept separate for safety.
     st.markdown('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">', unsafe_allow_html=True)
     
-    # CSS compressed for injection reliability, with height adjustments for the header and navigation.
     css_code_compressed = """
 <style>
 /* Aggressive reset for browser/Streamlit default margins */
 html, body { margin: 0 !important; padding: 0 !important; }
+/* IMPORTANT: We are explicitly unsetting Streamlit's default padding */
 [data-testid="stAppViewContainer"]{margin-top:0!important;padding-top:0!important;}
 body,[data-testid="stAppViewContainer"]{background:#001928!important;}
 [data-testid="stSidebar"],[data-testid="stSidebarContent"]{display:none!important;}
@@ -133,7 +132,7 @@ body,[data-testid="stAppViewContainer"]{background:#001928!important;}
     left:0;
     top:0;
     width:100%;
-    z-index:10;
+    z-index:10; /* BASE Z-INDEX for the background */
     padding:0 40px;
     background:#15425b;
     box-shadow:0 4px 12px rgba(0,0,0,0.3);
@@ -142,17 +141,21 @@ body,[data-testid="stAppViewContainer"]{background:#001928!important;}
     flex-direction:column;
     justify-content:flex-start; 
 }
-/* Top row (Title Only) - Pinning to the absolute top */
+
+/* Top row (Title Only) - Raise Z-INDEX to be above the header's background */
 .fixed-header-content{
     width:100%;
     display:flex;
     justify-content:center; /* Center title horizontally */
     align-items:center;
-    z-index: 100; /* Max Z-Axis priority */
+    height: 60px; /* Occupy the top 60px slice */
+    z-index: 100; /* HIGH Z-INDEX to show above header background */
     position: absolute;
-    top: -20px; /* NEW AGGRESSIVE PUSH UP */
-    padding-top: 0px; 
+    top: 0px; /* Pin to the absolute top of the container */
+    padding-top: 0px; /* NO padding */
+    padding-bottom: 0px;
 }
+
 /* Bottom row for Navigation Buttons */
 .fixed-nav-row{
     width:100%;
@@ -160,21 +163,26 @@ body,[data-testid="stAppViewContainer"]{background:#001928!important;}
     align-items:center;
     height: 60px;
     padding-bottom: 5px;
-    /* Adjusted top to 40px based on the -20px lift of the top row (120px - 20px buffer from top row - 60px height of fixed content) */
     position: absolute;
-    top: 40px; 
+    top: 60px; /* Starts exactly at the bottom of the top 60px slice */
+    z-index: 50; /* Needs to be lower than the title row, but above base (10) */
 }
 
-/* Adjusted title font size and margin to fit the header */
-.dashboard-title{font-size:1.8rem;font-weight:700;color:#fff;text-align:center;margin:0;line-height:1.2;}
+.dashboard-title{
+    font-size:1.8rem;
+    font-weight:700;
+    color:#fff;
+    text-align:center;
+    margin:0;
+    line-height:1.2; 
+    padding-top: 15px; /* Adjusted padding to visually center the title within its 60px slot */
+}
 
-/* Removed unused user/logout CSS classes for cleanup */
-/* We delete the components in Python, but keep this to ensure no remnants appear */
+/* Ensure no ghost elements appear */
 .user-box, .user-avatar, [data-testid^="stButton"][key^="header_logout"] {
     display: none !important; 
 }
 
-/* Main Navigation Buttons (used by stylable_container) */
 .main-nav-button button{
     background-color:#1c4868!important;
     color:white;
@@ -189,7 +197,6 @@ body,[data-testid="stAppViewContainer"]{background:#001928!important;}
 }
 .main-nav-button button:hover{background-color:#367588!important;border-color:#fff!important;}
 
-/* Main Content Area Padding - Adjusted to clear 120px header + 10px buffer */
 .main .block-container{padding-top:130px!important;padding-left:40px;padding-right:40px;padding-bottom:40px;max-width:100%!important;}
 .section-header{font-size:1.8rem;font-weight:700;color:#3a7ba4!important;margin-top:30px;margin-bottom:15px;border-bottom:2px solid #367588;padding-bottom:5px;}
 .placeholder-box{background:#15425b;color:#99aab5;padding:20px;border-radius:12px;margin-bottom:20px;box-shadow:0 2px 8px rgba(0,0,0,0.15);}
@@ -215,23 +222,21 @@ def dashboard(username):
     if "current_user" not in st.session_state:
         st.session_state.current_user = username
 
-    # 3. FIXED HEADER HTML STRUCTURE (Now 120px tall, holds all header elements)
+    # 3. FIXED HEADER HTML STRUCTURE (120px tall)
     st.markdown('<div id="fixed-header-container">', unsafe_allow_html=True)
 
-    # --- TOP ROW: Title Only (centered) ---
+    # --- TOP ROW: Title Only (Pinned to top, vertically centered within 60px) ---
     st.markdown('<div class="fixed-header-content">', unsafe_allow_html=True)
     
-    # Use a single column to ensure the title is centered and the user/logout elements are omitted.
+    # Use a single column to ensure the title is centered.
     title_col = st.columns([1])[0] 
 
     with title_col:
         st.markdown('<div class="dashboard-title">Anomalyze Dashboard</div>', unsafe_allow_html=True)
 
-    # NOTE: The User info and Logout button columns are now fully omitted here.
-
     st.markdown('</div>', unsafe_allow_html=True) # Closes fixed-header-content (Top Row)
     
-    # --- BOTTOM ROW: Navigation Buttons ---
+    # --- BOTTOM ROW: Navigation Buttons (Pinned below the title row) ---
     st.markdown('<div class="fixed-nav-row">', unsafe_allow_html=True)
     nav_col1, nav_col2, nav_col3, nav_col4 = st.columns(4)
 
