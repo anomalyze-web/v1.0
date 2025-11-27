@@ -180,15 +180,17 @@ def inject_css():
     }
     
     /* LOGOUT BUTTON: Smaller and aligned with the title */
+    /* Target the container (stButton) and remove all padding/margin/height it might add */
     [data-testid="stButton"][key="header_logout"] {
         display: flex;
         justify-content: flex-end; /* Push to the right */
         width: 100%;
-        margin-top: 0 !important;
-        /* Aligns the button vertically with the middle of the title/user box */
-        align-self: center; 
+        margin: 0 !important; /* CRITICAL: Eliminate external margin */
+        padding: 0 !important; /* Eliminate external padding */
+        height: auto !important; /* Let content define height */
     }
-
+    
+    /* Target the button element itself for sizing and styling */
     [data-testid="stButton"][key="header_logout"] button {
         /* Compacting the button */
         background-color:#1c4868!important;
@@ -200,7 +202,7 @@ def inject_css():
         width:70px!important; /* Fixed width */
         height:30px!important; /* Fixed height */
         padding: 0 8px !important; /* Tight padding */
-        margin:0!important;
+        margin:0!important; /* CRITICAL: Eliminate internal margin */
         transition:all 0.2s!important;
         box-shadow: 0 2px 4px rgba(0,0,0,0.2)!important; /* Smaller shadow */
     }
