@@ -126,7 +126,7 @@ html, body { margin: 0 !important; padding: 0 !important; }
 body,[data-testid="stAppViewContainer"]{background:#001928!important;}
 [data-testid="stSidebar"],[data-testid="stSidebarContent"]{display:none!important;}
 
-/* HEADER HEIGHT 60px for a single, stable row */
+/* HEADER HEIGHT 120px, NO USER/LOGOUT BUTTONS */
 #fixed-header-container{
     position:fixed;
     left:0;
@@ -134,76 +134,44 @@ body,[data-testid="stAppViewContainer"]{background:#001928!important;}
     width:100%;
     z-index:10; /* BASE Z-INDEX for the background */
     padding:0 40px;
-    background:rgba(21, 66, 91, 0.95); /* INCREASED TRANSPARENCY */
+    background:rgba(21, 66, 91, 0.95); 
     box-shadow:0 4px 12px rgba(0,0,0,0.3);
-    height:60px; /* FIXED HEIGHT for stability */
+    height:120px; /* RESTORED 120px HEIGHT */
     display:flex;
-    align-items:center; /* Vertically center content */
-    justify-content:space-between;
+    flex-direction:column;
+    justify-content:flex-start; 
 }
 
-/* Content Row (User/Title/Logout) */
+/* Top row (Title Only) - Centered in top half of 120px header */
 .fixed-header-content{
     width:100%;
     display:flex;
+    justify-content:center; /* Center title horizontally */
     align-items:center; 
     z-index: 100; /* HIGH Z-INDEX to show above header background */
+    position: absolute;
+    top: 0px; /* PINNED to the top of the container */
+    padding-top: 15px; /* Padded for vertical center in the top half */
+    padding-bottom: 5px;
 }
 
-/* User Box (Avatar and Username) */
-.user-box {
-    font-size:1.2rem;
-    font-weight:600;
-    color:#fff;
-    display:flex;
-    align-items:center;
-    gap:8px;
-    padding-top: 5px; /* Adjusting for alignment */
-}
-.user-avatar {
-    width:36px;
-    height:36px;
-    background:#367588;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:1.2rem;
-    color:#fff;
+/* Removed User Box and Logout Link/Button CSS */
+.user-box, .user-avatar, .logout-link, [data-testid="stButton"][key="header_logout"] {
+    display: none !important; 
 }
 
-/* New CSS for Logout Link */
-.logout-link {
-    color: #82c3d6 !important;
-    text-decoration: none;
-    font-size: 1.1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: color 0.2s;
-}
-.logout-link:hover {
-    color: #fff !important;
-    text-decoration: underline;
-}
-
-/* Removed specific styling for Logout Button to make way for link */
-[data-testid="stButton"][key="header_logout"] button {
-    display: none !important;
-}
-
-
-/* Navigation Buttons (Now float directly below the fixed header) */
+/* Navigation Buttons (Second Row, starts at 60px down) */
 .fixed-nav-row{
     width:100%;
     display:flex;
     align-items:center;
     height: 60px;
     padding-bottom: 5px;
-    padding-top: 5px; /* Added padding to separate from top bar */
-    z-index: 50; /* Needs to be visible */
+    padding-top: 5px; 
+    z-index: 50; 
     background: #001928; /* Same background as main body */
-    position: absolute; /* Needed to place buttons correctly */
-    top: 60px; /* Starts exactly where the header ends */
+    position: absolute;
+    top: 60px; /* Starts exactly where the top 60px section ends */
 }
 
 .dashboard-title{
@@ -256,67 +224,24 @@ def dashboard(username):
     if "current_user" not in st.session_state:
         st.session_state.current_user = username
     
-    # --- LOGOUT HANDLER FUNCTION (Triggers rerun for state change) ---
-    # This JS function must be injected via HTML to trigger the Python rerun logic
-    js_logout = """
-        <script>
-        function trigger_logout() {
-            const logoutKey = "stButton:header_logout";
-            const btn = window.parent.document.querySelector('[data-testid="' + logoutKey + '"] button');
-            if (btn) {
-                btn.click();
-            } else {
-                // Fallback: If the button is hidden, force a Streamlit rerun
-                window.parent.document.dispatchEvent(new Event('change'));
-            }
-        }
-        </script>
-    """
-    st.markdown(js_logout, unsafe_allow_html=True)
-
-
-    # 3. FIXED HEADER HTML STRUCTURE (60px tall)
+    # 3. FIXED HEADER HTML STRUCTURE (120px tall)
     st.markdown('<div id="fixed-header-container">', unsafe_allow_html=True)
 
-    # --- TOP ROW: User / Title / Logout ---
+    # --- TOP ROW: Title Only ---
     st.markdown('<div class="fixed-header-content">', unsafe_allow_html=True)
     
-    user_col, title_col, logout_col = st.columns([2, 6, 2])
-
-    with user_col:
-        st.markdown(f'''
-<div class="user-box" style="justify-content: flex-start;">
-<div class="user-avatar">👤</div>
-{username.upper()}
-</div>
-''', unsafe_allow_html=True)
+    # Use a single column to ensure the title is centered, but keep the column structure 
+    # for consistent spacing with the navigation below.
+    empty_col_left, title_col, empty_col_right = st.columns([2, 6, 2])
 
     with title_col:
         st.markdown('<div class="dashboard-title">Anomalyze Dashboard</div>', unsafe_allow_html=True)
 
-    with logout_col:
-        st.markdown('<div style="width: 100%; display: flex; justify-content: flex-end; align-items: center;">', unsafe_allow_html=True)
-        
-        # Hidden st.button is used as the Python trigger for logout state change
-        if st.button("Logout", key="header_logout"):
-            st.session_state.logged_in = False
-            st.session_state.current_user = ""
-            st.session_state.page = "login"
-            st.rerun()
-
-        # Visible text link that calls the JS function to trigger the hidden button
-        st.markdown(
-            '<a href="javascript:void(0);" onclick="trigger_logout()" class="logout-link">Logout</a>',
-            unsafe_allow_html=True
-        )
-
-        st.markdown('</div>', unsafe_allow_html=True)
-
+    # Note: User/Logout Python logic is removed/hidden.
 
     st.markdown('</div>', unsafe_allow_html=True) # Closes fixed-header-content (Top Row)
     
-    # --- BOTTOM ROW: Navigation Buttons (Now rendered outside the fixed header) ---
-    # The fixed-nav-row is now styled to start at 60px down, effectively becoming the second fixed bar.
+    # --- BOTTOM ROW: Navigation Buttons ---
     st.markdown('<div class="fixed-nav-row">', unsafe_allow_html=True)
     nav_col1, nav_col2, nav_col3, nav_col4 = st.columns(4)
 
