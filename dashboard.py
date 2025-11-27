@@ -2,44 +2,16 @@ import streamlit as st
 import base64
 from streamlit_extras.stylable_container import stylable_container
 
-# Placeholder functions for analysis modules (simulate external imports)
-# In a real application, you would ensure 'CDR_analysis.py', etc., contain these functions.
-def show_cdr_analysis(case_number, investigator_name, case_name, remarks):
-    st.header("CDR Analysis Page 📞")
-    st.write(f"**Case No:** {case_number}, **Case Name:** {case_name}, **Investigator:** {investigator_name}")
-    st.markdown("---")
-    if st.button("⬅ Back to New Case Selection", key="back_from_cdr_analysis"):
-        st.session_state.page = "new_case_selector"
-        st.rerun()
-
-def show_ipdr_analysis(case_number, investigator_name, case_name, remarks):
-    st.header("IPDR Analysis Page 🌐")
-    st.write(f"**Case No:** {case_number}, **Case Name:** {case_name}, **Investigator:** {investigator_name}")
-    st.markdown("---")
-    if st.button("⬅ Back to New Case Selection", key="back_from_ipdr_analysis"):
-        st.session_state.page = "new_case_selector"
-        st.rerun()
-
-def show_firewall_analysis(case_number, investigator_name, case_name, remarks):
-    st.header("FIREWALL Analysis Page 🔥")
-    st.write(f"**Case No:** {case_number}, **Case Name:** {case_name}, **Investigator:** {investigator_name}")
-    st.markdown("---")
-    if st.button("⬅ Back to New Case Selection", key="back_from_firewall_analysis"):
-        st.session_state.page = "new_case_selector"
-        st.rerun()
-
-def show_correlation_analysis(case_number, investigator_name, case_name, remarks):
-    st.header("CO-RELATION Analysis Page 🔗")
-    st.write(f"**Case No:** {case_number}, **Case Name:** {case_name}, **Investigator:** {investigator_name}")
-    st.markdown("---")
-    if st.button("⬅ Back to New Case Selection", key="back_from_correlation_analysis"):
-        st.session_state.page = "new_case_selector"
-        st.rerun()
+# Import the analysis modules (Ensure these files are in the same directory)
+from CDR_analysis import show_cdr_analysis
+from IPDR_analysis import show_ipdr_analysis
+from FIREWALL_analysis import show_firewall_analysis
+from CO_Relation_analysis import show_correlation_analysis
 
 # --- Helper Functions (Page Views) ---
 
 def show_evidence_library():
-    st.title("Evidence Library 🗃️")
+    st.title("Evidence Library")
     st.markdown("---")
     if st.button("⬅ Back to Dashboard"):
         st.session_state.page = "main"
@@ -52,7 +24,7 @@ def show_evidence_library():
     </div>', unsafe_allow_html=True)
 
 def show_search_cases():
-    st.title("Search Historical Cases 🔎")
+    st.title("Search Historical Cases")
     st.markdown("---")
     if st.button("⬅ Back to Dashboard"):
         st.session_state.page = "main"
@@ -65,7 +37,7 @@ def show_search_cases():
     </div>', unsafe_allow_html=True)
 
 def show_legal_reference():
-    st.title("Legal Reference and Standards ⚖️")
+    st.title("Legal Reference and Standards")
     st.markdown("---")
     if st.button("⬅ Back to Dashboard"):
         st.session_state.page = "main"
@@ -77,15 +49,13 @@ def show_legal_reference():
     </div>', unsafe_allow_html=True)
 
 def show_new_case_selector():
-    st.markdown(f"### Select Data Type for New Case: 💾")
-
-    if st.button("⬅ Back to Dashboard", key="back_to_dash_new_case_sel"):
-        st.session_state.page = "main"
-        st.rerun()
-    
-    st.markdown("---")
+    st.markdown(f"### Select Data Type for New Case:")
 
     col1, col2, col3, col4 = st.columns(4)
+
+    if st.button("⬅ Back to Dashboard"):
+        st.session_state.page = "main"
+        st.rerun()
 
     selector_button_style = """
     button {
@@ -134,138 +104,188 @@ def show_new_case_selector():
                 st.session_state.form_submitted = False
                 st.rerun()
 
-# --- CSS Injection ---
+# --- CSS and Core Function ---
 
-def inject_css():
-    st.markdown('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">', unsafe_allow_html=True)
-    
-    css_code_compressed = """
-<style>
-/* Aggressive reset for browser/Streamlit default margins */
-html, body { margin: 0 !important; padding: 0 !important; }
-/* IMPORTANT: We are explicitly unsetting Streamlit's default padding */
-[data-testid="stAppViewContainer"]{margin-top:0!important;padding-top:0!important;}
-body,[data-testid="stAppViewContainer"]{background:#001928!important;}
-[data-testid="stSidebar"],[data-testid="stSidebarContent"]{display:none!important;}
+def dashboard_css():
+    st.markdown("""
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+    .main .block-container {
+    padding-top: 140px !important;
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-bottom: 40px;
+    max-width: 100% !important;
+    }
+    body, [data-testid="stAppViewContainer"] {
+    background: #001928 !important;
+    }
 
-/* HEADER HEIGHT 120px, NO USER/LOGOUT BUTTONS */
-#fixed-header-container{
-    position:fixed;
-    left:0;
-    top:0;
-    width:100%;
-    z-index:10; /* BASE Z-INDEX for the background */
-    padding:0 40px;
-    background:rgba(21, 66, 91, 0.95); 
-    box-shadow:0 4px 12px rgba(0,0,0,0.3);
-    height:120px; /* RESTORED 120px HEIGHT */
-    display:flex;
-    flex-direction:column;
-    justify-content:flex-start; 
-}
-
-/* Top row (Title Only) - Centered in top half of 120px header */
-.fixed-header-content{
-    width:100%;
-    display:flex;
-    justify-content:center; /* Center title horizontally */
-    align-items:center; 
-    z-index: 100; /* HIGH Z-INDEX to show above header background */
-    position: absolute;
-    top: 0px; /* PINNED to the top of the container */
-    padding-top: 15px; /* Padded for vertical center in the top half */
-    padding-bottom: 5px;
-}
-
-/* Removed User Box and Logout Link/Button CSS */
-.user-box, .user-avatar, .logout-link, [data-testid="stButton"][key="header_logout"] {
-    display: none !important; 
-}
-
-/* Navigation Buttons (Second Row, starts at 60px down) */
-.fixed-nav-row{
-    width:100%;
-    display:flex;
-    align-items:center;
+    #fixed-header-container {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    z-index: 10;
+    padding: 0 40px;
+    background: #15425b;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    .fixed-header-content {
     height: 60px;
+    display: flex;
+    align-items: center;
+    }
+    .dashboard-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #fff;
+    margin-right: 32px;
+    }
+    .user-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-left: auto;
+    }
+    .user-box {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    }
+    .user-avatar {
+    width: 36px;
+    height: 36px;
+    background: #367588;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: #fff;
+    }
+
+    #fixed-nav-container {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    z-index: 9;
+    background-color: #001928;
+    padding: 10px 40px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    }
+
+    .main-nav-button button {
+    background-color: #1c4868 !important;
+    color: white;
+    border: 2px solid #61a3cd !important;
+    border-radius: 8px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    width: 100%;
+    height: 40px;
+    margin: 0;
+    transition: all 0.2s;
+    }
+    .main-nav-button button:hover {
+    background-color: #367588 !important;
+    border-color: #fff !important;
+    }
+
+    .dashboard-main {
+    padding-top: 20px;
+    }
+    .section-header {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #3a7ba4 !important;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #367588;
     padding-bottom: 5px;
-    padding-top: 5px; 
-    z-index: 50; 
-    background: #001928; /* Same background as main body */
-    position: absolute;
-    top: 60px; /* Starts exactly where the top 60px section ends */
-}
+    }
+    .placeholder-box {
+    background: #15425b;
+    color: #99aab5;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .placeholder-box h4 {
+    margin-top: 0;
+    color: #fff;
+    }
 
-.dashboard-title{
-    font-size:1.8rem;
-    font-weight:700;
-    color:#fff;
-    text-align:center;
-    margin:0;
-    line-height:1.2; 
-    padding-top: 0px; 
-}
-
-.main-nav-button button{
-    background-color:#1c4868!important;
-    color:white!important;
-    border:2px solid #61a3cd!important;
-    border-radius:8px!important;
-    font-size:1.05rem!important;
-    font-weight:600!important;
-    width:100%; 
-    height:40px;
-    margin:0;
-    transition:all 0.2s;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-}
-.main-nav-button button:hover{background-color:#367588!important;border-color:#fff!important;}
-
-/* Adjust content padding to accommodate the 120px header + small top margin */
-.main .block-container{padding-top:130px!important;padding-left:40px;padding-right:40px;padding-bottom:40px;max-width:100%!important;}
-.section-header{font-size:1.8rem;font-weight:700;color:#3a7ba4!important;margin-top:30px;margin-bottom:15px;border-bottom:2px solid #367588;padding-bottom:5px;}
-.placeholder-box{background:#15425b;color:#99aab5;padding:20px;border-radius:12px;margin-bottom:20px;box-shadow:0 2px 8px rgba(0,0,0,0.15);}
-.placeholder-box h4{margin-top:0;color:#fff;}
-</style>
-"""
-    st.markdown(css_code_compressed, unsafe_allow_html=True)
-
-# --- Core Function ---
+    [data-testid="stSidebar"] {
+    display: none !important;
+    }
+    [data-testid="stSidebarContent"] {
+    display: none !important;
+    }
+    [data-testid="stButton"][key="header_logout"] button {
+    background-color: #367588;
+    color: white;
+    border-radius: 8px;
+    font-size: 1.0rem;
+    font-weight: 600;
+    width: auto;
+    padding: 8px 15px;
+    height: 40px;
+    margin: 0;
+    transition: background-color 0.2s;
+    border: none;
+    }
+    [data-testid="stButton"][key="header_logout"] button:hover {
+    background-color: #e57373;
+    }
+    </style>
+    """, unsafe_allow_html=True)
 
 def dashboard(username):
     st.set_page_config(page_title="Anomalyze Dashboard", layout="wide")
-    
-    # 1. CSS INJECTION BLOCK
-    inject_css()
-    
-    # 2. Session State Initialization
+    dashboard_css()
+
+    # --- Session State Initialization ---
     if "page" not in st.session_state:
         st.session_state.page = "main"
     if "form_submitted" not in st.session_state:
         st.session_state.form_submitted = False
-    # Ensure login state is initialized for the logic to work correctly
-    if "logged_in" not in st.session_state:
-        st.session_state.logged_in = True
-    if "current_user" not in st.session_state:
-        st.session_state.current_user = username
-    
-    # 3. FIXED HEADER HTML STRUCTURE (120px tall)
-    st.markdown('<div id="fixed-header-container">', unsafe_allow_html=True)
 
-    # --- TOP ROW: Title Only ---
+    # --- Fixed Header (Title, User ID, Logout) ---
+    st.markdown('<div id="fixed-header-container">', unsafe_allow_html=True)
     st.markdown('<div class="fixed-header-content">', unsafe_allow_html=True)
-    
-    # Use columns to position the title
-    empty_col_left, title_col, empty_col_right = st.columns([2, 6, 2])
+
+    title_col, spacer_col, user_col, logout_col = st.columns([2, 5, 2, 1.5])
 
     with title_col:
-        # Title is centered by the CSS in fixed-header-content
-        st.markdown('<div class="dashboard-title">Anomalyze Dashboard</div>', unsafe_allow_html=True)
+        st.markdown('<div class="dashboard-title">Dashboard</div>', unsafe_allow_html=True)
 
-    st.markdown('</div>', unsafe_allow_html=True) # Closes fixed-header-content (Top Row)
-    
-    # --- BOTTOM ROW: Navigation Buttons ---
-    st.markdown('<div class="fixed-nav-row">', unsafe_allow_html=True)
+    with user_col:
+        st.markdown(f'''
+        <div class="user-box">
+        {username.upper()}
+        <div class="user-avatar">👤</div>
+        </div>
+        ''', unsafe_allow_html=True)
+
+    with logout_col:
+        if st.button("Logout", key="header_logout"):
+            st.session_state.logged_in = False
+            st.session_state.current_user = ""
+            st.session_state.page = "main"
+            st.rerun()
+
+    st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    # --- Fixed Navigation Bar (Main Buttons) ---
+    st.markdown('<div id="fixed-nav-container">', unsafe_allow_html=True)
+
     nav_col1, nav_col2, nav_col3, nav_col4 = st.columns(4)
 
     def nav_button(label, key, target_page, col):
@@ -275,28 +295,26 @@ def dashboard(username):
                     st.session_state.page = target_page
                     st.rerun()
 
-    nav_button("New Case", "nav_new_case", "new_case_selector", nav_col1) 
+    nav_button("New Case", "nav_new_case", "new_case_selector", nav_col1)
     nav_button("Evidence Library", "nav_evidence", "evidence_library", nav_col2)
     nav_button("Search Cases", "nav_search", "search_cases", nav_col3)
     nav_button("Legal Reference", "nav_legal", "legal_reference", nav_col4)
 
-    st.markdown('</div>', unsafe_allow_html=True) # Closes fixed-nav-row (Bottom Row)
-    
-    st.markdown('</div>', unsafe_allow_html=True) # Closes fixed-header-container
+    st.markdown('</div>', unsafe_allow_html=True)
 
-    # 4. MAIN CONTENT AREA
+
+    # --- Main Content Router ---
     st.markdown('<div class="dashboard-main">', unsafe_allow_html=True)
 
     if st.session_state.page == "main":
-        
-        st.markdown('<h2 class="section-header">Bookmarked Cases ⭐</h2>', unsafe_allow_html=True)
+        st.markdown('<h2 class="section-header">Bookmarked Cases</h2>', unsafe_allow_html=True)
         st.markdown('<div class="placeholder-box"><h4>No bookmarked cases available.</h4><p>Use the bookmark feature on case analysis pages to quickly access important investigations.</p></div>', unsafe_allow_html=True)
 
-        st.markdown('<h2 class="section-header">Recent Activity 🕓</h2>', unsafe_allow_html=True)
+        st.markdown('<h2 class="section-header">Recent Activity</h2>', unsafe_allow_html=True)
         st.markdown('<div class="placeholder-box"><h4>No recent cases analyzed.</h4><p>Start a new case using the "New Case" button above to begin your analysis.</p></div>', unsafe_allow_html=True)
 
     elif st.session_state.page == "new_case_selector":
-        show_new_case_selector() 
+        show_new_case_selector()
 
     elif st.session_state.page == "evidence_library":
         show_evidence_library()
@@ -305,38 +323,31 @@ def dashboard(username):
     elif st.session_state.page == "legal_reference":
         show_legal_reference()
 
-    # --- Analysis Case Submission Form ---
     elif st.session_state.page in ["cdr", "ipdr", "firewall", "correlation"]:
-        st.markdown(f"### Uploading **{st.session_state.page.upper()}** Case 📁")
+        st.markdown(f"### Uploading **{st.session_state.page.upper()}** Case")
 
-        # The Back button needs to check if the user is coming from the form or analysis page
         if st.button("⬅ Back to New Case Selection"):
             st.session_state.page = "new_case_selector"
             st.session_state.form_submitted = False
             st.rerun()
 
         with st.form(f"{st.session_state.page}_form"):
-            # Preserve state if the user navigates back to the form
-            case_number = st.text_input("Case Number", value=st.session_state.get('case_number', ''))
-            investigator_name = st.text_input("Investigator Name", value=st.session_state.get('investigator_name', ''))
-            case_name = st.text_input("Case Name", value=st.session_state.get('case_name', ''))
-            remarks = st.text_area("Remarks", value=st.session_state.get('remarks', ''))
-            submit = st.form_submit_button("Submit Case Data")
-            
+            case_number = st.text_input("Case Number")
+            investigator_name = st.text_input("Investigator Name")
+            case_name = st.text_input("Case Name")
+            remarks = st.text_area("Remarks")
+            submit = st.form_submit_button("Submit")
             if submit:
-                # Store data in session state upon submission
+                st.success(
+                    f"{st.session_state.page.upper()} Case '{case_name}' (Case No: {case_number}) uploaded by {investigator_name}."
+                )
+                st.session_state.form_submitted = True
                 st.session_state.case_number = case_number
                 st.session_state.investigator_name = investigator_name
                 st.session_state.case_name = case_name
                 st.session_state.remarks = remarks
-                st.session_state.form_submitted = True
-                
-                st.success(
-                    f"{st.session_state.page.upper()} Case '{case_name}' (Case No: {case_number}) uploaded by {investigator_name}."
-                )
 
-        # Analysis button only appears if the form was submitted successfully
-        if st.session_state.form_submitted and st.session_state.get('case_name'):
+        if st.session_state.form_submitted:
             analysis_labels = {
                 "cdr": "Start CDR Analysis",
                 "ipdr": "Start IPDR Analysis",
@@ -345,12 +356,10 @@ def dashboard(username):
             }
             label = analysis_labels.get(st.session_state.page, "Start Analysis")
             if st.button(label):
-                # Transition to the specific analysis page
                 st.session_state.page = f"{st.session_state.page}_analysis"
                 st.session_state.form_submitted = False
                 st.rerun()
 
-    # --- Analysis Page Router ---
     elif st.session_state.page == "cdr_analysis":
         show_cdr_analysis(
             st.session_state.case_number,
@@ -381,14 +390,3 @@ def dashboard(username):
         )
 
     st.markdown('</div>', unsafe_allow_html=True)
-
-# Example usage (assuming this is part of a larger app logic)
-# if __name__ == "__main__":
-#     if "logged_in" not in st.session_state or not st.session_state.logged_in:
-#         # ... login page logic ...
-#         pass # Assume a login function handles this
-#     else:
-#         dashboard(st.session_state.current_user)
-
-# To run this in a simple environment for testing:
-# dashboard("TEST_USER")
