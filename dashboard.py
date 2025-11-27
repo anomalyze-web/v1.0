@@ -172,24 +172,25 @@ body,[data-testid="stAppViewContainer"]{background:#001928!important;}
     color:#fff;
 }
 
-/* Logout Button (Aggressively styled to match .main-nav-button) */
+/* New CSS for Logout Link */
+.logout-link {
+    color: #82c3d6 !important;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+.logout-link:hover {
+    color: #fff !important;
+    text-decoration: underline;
+}
+
+/* Removed specific styling for Logout Button to make way for link */
 [data-testid="stButton"][key="header_logout"] button {
-    background-color:#1c4868!important;
-    color:white!important;
-    border:2px solid #61a3cd!important;
-    border-radius:8px!important;
-    font-size:1.05rem!important;
-    font-weight:600!important;
-    width:100px!important; 
-    height:40px!important;
-    margin:0!important;
-    transition:all 0.2s!important;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2)!important;
+    display: none !important;
 }
-[data-testid="stButton"][key="header_logout"] button:hover {
-    background-color:#367588!important;
-    border-color:#fff!important;
-}
+
 
 /* Navigation Buttons (Now float directly below the fixed header) */
 .fixed-nav-row{
@@ -254,6 +255,25 @@ def dashboard(username):
         st.session_state.logged_in = True
     if "current_user" not in st.session_state:
         st.session_state.current_user = username
+    
+    # --- LOGOUT HANDLER FUNCTION (Triggers rerun for state change) ---
+    # This JS function must be injected via HTML to trigger the Python rerun logic
+    js_logout = """
+        <script>
+        function trigger_logout() {
+            const logoutKey = "stButton:header_logout";
+            const btn = window.parent.document.querySelector('[data-testid="' + logoutKey + '"] button');
+            if (btn) {
+                btn.click();
+            } else {
+                // Fallback: If the button is hidden, force a Streamlit rerun
+                window.parent.document.dispatchEvent(new Event('change'));
+            }
+        }
+        </script>
+    """
+    st.markdown(js_logout, unsafe_allow_html=True)
+
 
     # 3. FIXED HEADER HTML STRUCTURE (60px tall)
     st.markdown('<div id="fixed-header-container">', unsafe_allow_html=True)
@@ -276,11 +296,20 @@ def dashboard(username):
 
     with logout_col:
         st.markdown('<div style="width: 100%; display: flex; justify-content: flex-end; align-items: center;">', unsafe_allow_html=True)
+        
+        # Hidden st.button is used as the Python trigger for logout state change
         if st.button("Logout", key="header_logout"):
             st.session_state.logged_in = False
             st.session_state.current_user = ""
             st.session_state.page = "login"
             st.rerun()
+
+        # Visible text link that calls the JS function to trigger the hidden button
+        st.markdown(
+            '<a href="javascript:void(0);" onclick="trigger_logout()" class="logout-link">Logout</a>',
+            unsafe_allow_html=True
+        )
+
         st.markdown('</div>', unsafe_allow_html=True)
 
 
