@@ -142,18 +142,18 @@ body,[data-testid="stAppViewContainer"]{background:#001928!important;}
     justify-content:flex-start; 
 }
 
-/* Top row (Title Only) - Raise Z-INDEX to be above the header's background */
+/* Top row (Title Only) - SHRINK HEIGHT & PUSH TO TOP */
 .fixed-header-content{
     width:100%;
     display:flex;
     justify-content:center; /* Center title horizontally */
     align-items:center;
-    height: 60px; /* Occupy the top 60px slice */
+    /* REMOVED fixed height: height: 60px; */
     z-index: 100; /* HIGH Z-INDEX to show above header background */
     position: absolute;
     top: 0px; /* Pin to the absolute top of the container */
-    padding-top: 0px; /* NO padding */
-    padding-bottom: 0px;
+    padding-top: 5px; /* Minimal top padding for breathing room */
+    padding-bottom: 5px;
 }
 
 /* Bottom row for Navigation Buttons */
@@ -164,7 +164,7 @@ body,[data-testid="stAppViewContainer"]{background:#001928!important;}
     height: 60px;
     padding-bottom: 5px;
     position: absolute;
-    top: 60px; /* Starts exactly at the bottom of the top 60px slice */
+    top: 40px; /* Starts below the shrunk title row (approx 40px) */
     z-index: 50; /* Needs to be lower than the title row, but above base (10) */
 }
 
@@ -175,7 +175,7 @@ body,[data-testid="stAppViewContainer"]{background:#001928!important;}
     text-align:center;
     margin:0;
     line-height:1.2; 
-    padding-top: 15px; /* Adjusted padding to visually center the title within its 60px slot */
+    padding-top: 0px; /* Removed internal padding */
 }
 
 /* Ensure no ghost elements appear */
