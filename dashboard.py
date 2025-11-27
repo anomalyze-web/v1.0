@@ -142,18 +142,17 @@ body,[data-testid="stAppViewContainer"]{background:#001928!important;}
     justify-content:flex-start; 
 }
 
-/* Top row (Title Only) - SHRINK HEIGHT & PUSH TO TOP */
+/* Top row (Title Only) - AGGRESSIVE LIFT AND HIGH Z-INDEX */
 .fixed-header-content{
     width:100%;
     display:flex;
     justify-content:center; /* Center title horizontally */
     align-items:center;
-    /* REMOVED fixed height: height: 60px; */
     z-index: 100; /* HIGH Z-INDEX to show above header background */
     position: absolute;
-    top: 0px; /* Pin to the absolute top of the container */
-    padding-top: 5px; /* Minimal top padding for breathing room */
-    padding-bottom: 5px;
+    top: -5px; /* PULL UP: Use negative top to counteract external padding */
+    padding-top: 0px; /* NO padding */
+    padding-bottom: 0px;
 }
 
 /* Bottom row for Navigation Buttons */
@@ -164,7 +163,7 @@ body,[data-testid="stAppViewContainer"]{background:#001928!important;}
     height: 60px;
     padding-bottom: 5px;
     position: absolute;
-    top: 40px; /* Starts below the shrunk title row (approx 40px) */
+    top: 35px; /* ADJUSTED: Starts below the aggressively lifted title row */
     z-index: 50; /* Needs to be lower than the title row, but above base (10) */
 }
 
