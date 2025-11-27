@@ -126,7 +126,7 @@ html, body { margin: 0 !important; padding: 0 !important; }
 body,[data-testid="stAppViewContainer"]{background:#001928!important;}
 [data-testid="stSidebar"],[data-testid="stSidebarContent"]{display:none!important;}
 
-/* HEADER HEIGHT 120px to hold two rows (Title/User/Logout + Nav Buttons) */
+/* HEADER HEIGHT 60px for a single, stable row */
 #fixed-header-container{
     position:fixed;
     left:0;
@@ -136,23 +136,18 @@ body,[data-testid="stAppViewContainer"]{background:#001928!important;}
     padding:0 40px;
     background:rgba(21, 66, 91, 0.95); /* INCREASED TRANSPARENCY */
     box-shadow:0 4px 12px rgba(0,0,0,0.3);
-    height:120px;
+    height:60px; /* FIXED HEIGHT for stability */
     display:flex;
-    flex-direction:column;
-    justify-content:flex-start; 
+    align-items:center; /* Vertically center content */
+    justify-content:space-between;
 }
 
-/* Top row (User/Title/Logout) - SHRINKS TO CONTENT HEIGHT, PINNED TO TOP */
+/* Content Row (User/Title/Logout) */
 .fixed-header-content{
     width:100%;
     display:flex;
-    justify-content:center;
-    align-items:center; /* CRITICAL: Center items vertically */
+    align-items:center; 
     z-index: 100; /* HIGH Z-INDEX to show above header background */
-    position: absolute;
-    top: 0px; /* PINNED to the top of the container */
-    padding-top: 5px; /* Minimal top padding */
-    padding-bottom: 5px;
 }
 
 /* User Box (Avatar and Username) */
@@ -163,6 +158,7 @@ body,[data-testid="stAppViewContainer"]{background:#001928!important;}
     display:flex;
     align-items:center;
     gap:8px;
+    padding-top: 5px; /* Adjusting for alignment */
 }
 .user-avatar {
     width:36px;
@@ -178,35 +174,35 @@ body,[data-testid="stAppViewContainer"]{background:#001928!important;}
 
 /* Logout Button (Aggressively styled to match .main-nav-button) */
 [data-testid="stButton"][key="header_logout"] button {
-    /* Copying .main-nav-button styles manually and forcefully */
     background-color:#1c4868!important;
     color:white!important;
     border:2px solid #61a3cd!important;
     border-radius:8px!important;
     font-size:1.05rem!important;
     font-weight:600!important;
-    width:100px!important; /* Keep a sane width */
+    width:100px!important; 
     height:40px!important;
     margin:0!important;
     transition:all 0.2s!important;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2)!important; /* Match shadow from selector_button_style */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2)!important;
 }
 [data-testid="stButton"][key="header_logout"] button:hover {
     background-color:#367588!important;
     border-color:#fff!important;
 }
 
-
-/* Bottom row for Navigation Buttons */
+/* Navigation Buttons (Now float directly below the fixed header) */
 .fixed-nav-row{
     width:100%;
     display:flex;
     align-items:center;
     height: 60px;
     padding-bottom: 5px;
-    position: absolute;
-    top: 50px; /* ADJUSTED: Starts below the content-sized title row */
-    z-index: 50; 
+    padding-top: 5px; /* Added padding to separate from top bar */
+    z-index: 50; /* Needs to be visible */
+    background: #001928; /* Same background as main body */
+    position: absolute; /* Needed to place buttons correctly */
+    top: 60px; /* Starts exactly where the header ends */
 }
 
 .dashboard-title{
@@ -219,11 +215,6 @@ body,[data-testid="stAppViewContainer"]{background:#001928!important;}
     padding-top: 0px; 
 }
 
-/* Ensure no ghost elements appear (We rely on Python code deleting them now) */
-.user-box, .user-avatar, [data-testid^="stButton"][key^="header_logout"] {
-    /* Styles needed for user/logout visibility, removed 'display: none !important;' */
-}
-
 .main-nav-button button{
     background-color:#1c4868!important;
     color:white!important;
@@ -231,11 +222,11 @@ body,[data-testid="stAppViewContainer"]{background:#001928!important;}
     border-radius:8px!important;
     font-size:1.05rem!important;
     font-weight:600!important;
-    width:100%; /* Ensure full width within its column */
+    width:100%; 
     height:40px;
     margin:0;
     transition:all 0.2s;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Added shadow for consistency */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 .main-nav-button button:hover{background-color:#367588!important;border-color:#fff!important;}
 
@@ -264,7 +255,7 @@ def dashboard(username):
     if "current_user" not in st.session_state:
         st.session_state.current_user = username
 
-    # 3. FIXED HEADER HTML STRUCTURE (120px tall)
+    # 3. FIXED HEADER HTML STRUCTURE (60px tall)
     st.markdown('<div id="fixed-header-container">', unsafe_allow_html=True)
 
     # --- TOP ROW: User / Title / Logout ---
@@ -285,7 +276,6 @@ def dashboard(username):
 
     with logout_col:
         st.markdown('<div style="width: 100%; display: flex; justify-content: flex-end; align-items: center;">', unsafe_allow_html=True)
-        # We don't need stylable_container here, as we are targeting the button directly via CSS
         if st.button("Logout", key="header_logout"):
             st.session_state.logged_in = False
             st.session_state.current_user = ""
@@ -296,7 +286,8 @@ def dashboard(username):
 
     st.markdown('</div>', unsafe_allow_html=True) # Closes fixed-header-content (Top Row)
     
-    # --- BOTTOM ROW: Navigation Buttons ---
+    # --- BOTTOM ROW: Navigation Buttons (Now rendered outside the fixed header) ---
+    # The fixed-nav-row is now styled to start at 60px down, effectively becoming the second fixed bar.
     st.markdown('<div class="fixed-nav-row">', unsafe_allow_html=True)
     nav_col1, nav_col2, nav_col3, nav_col4 = st.columns(4)
 
