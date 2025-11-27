@@ -57,8 +57,7 @@ def show_correlation_analysis(case_number, investigator_name, case_name, remarks
     # --- SIDEBAR ---
     with col_sidebar:
         with st.container(border=True):
-            st.image("logo1.png", width=180)
-            st.markdown(f"#### 👤 {username.capitalize()}")
+            st.image("logo.png", width=180)
             st.divider()
 
             if st.button(" CDR Analysis", key="nav_cdr"):
