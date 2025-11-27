@@ -1,11 +1,4 @@
 import streamlit as st
-# The original code contained commented/unused imports from non-existent local files.
-# I will keep the available imports but remove the ones referencing local files that aren't defined here.
-# from CDR_analysis import show_cdr_analysis
-# from IPDR_analysis import show_ipdr_analysis
-# from FIREWALL_analysis import show_firewall_analysis
-# from CO_Relation_analysis import show_correlation_analysis
-
 from streamlit_extras.stylable_container import stylable_container
 
 # Mock analysis functions based on user's provided structure
@@ -136,7 +129,7 @@ def inject_css():
     width:100%;
     z-index:10; /* BASE Z-INDEX for the background */
     padding:0 40px;
-    background:rgba(21, 66, 91, 0.95); /* INCREASED TRANSPARENCY */
+    background:rgba(21, 66, 91, 0.4); /* INCREASED TRANSPARENCY */
     box-shadow:0 4px 12px rgba(0,0,0,0.3);
     height:120px;
     display:flex;
