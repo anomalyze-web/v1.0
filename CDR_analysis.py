@@ -48,8 +48,7 @@ def show_cdr_analysis(case_number, investigator_name, case_name, remarks, userna
     # --- SIDEBAR ---
     with col_sidebar:
         with st.container(border=True):
-            st.image("logo1.png", width=180)  # Logo
-            st.markdown(f"#### 👤 {username.capitalize()}")
+            st.image("logo.png", width=180)  # Logo
             st.divider()
 
             if st.button(" IPDR Analysis"):
