@@ -58,8 +58,7 @@ def show_firewall_analysis(case_number, investigator_name, case_name, remarks, u
     # --- SIDEBAR ---
     with col_sidebar:
         with st.container(border=True):
-            st.image("logo1.png", width=180)
-            st.markdown(f"#### 👤 {username.capitalize()}")
+            st.image("logo.png", width=180)
             st.divider()
 
             if st.button("   CDR Analysis", key="nav_cdr"):
@@ -74,7 +73,7 @@ def show_firewall_analysis(case_number, investigator_name, case_name, remarks, u
                 st.session_state.page = "correlation_analysis"
                 st.rerun()
 
-            if st.button("  Back to Dashboard", key="nav_dash"):
+            if st.button(" Back to Dashboard", key="nav_dash"):
                 st.session_state.page = "main"
                 st.rerun()
 
@@ -82,7 +81,7 @@ def show_firewall_analysis(case_number, investigator_name, case_name, remarks, u
     with col_main:
         features = [
             {"title": "Behaviour Baselining", "summary": "Detects deviations from normal user or device behavior over time.", "file": "behaviour_baselining"},
-            {"title": "Repeated Failed Logins Analyzer", "summary": "Detects repeated failed logins from the file depicting potenial brute force or types od DDOS attack", "file":   "repeated_failed_logins"},
+            {"title": "Repeated Failed Logins Analyzer", "summary": "Detects repeated failed logins from the file depicting potenial brute force or types od DDOS attack", "file": "repeated_failed_logins"},
             {"title": "Firewall Bypass Detection", "summary": "Identifies attempts to bypass firewall using unusual methods.", "file": "firewall_bypass_module"},
             {"title": "MAC-IP Mismatch Detector", "summary": "Flags inconsistencies between MAC addresses and IPs.", "file": "mac_ip_mismatch_dtetctor"},
             {"title": "Non-Server Traffic Monitor", "summary": "Detects non-standard services running on user machines.", "file": "non-server_traffic_module"},
@@ -97,8 +96,9 @@ def show_firewall_analysis(case_number, investigator_name, case_name, remarks, u
         ]
 
         if 'selected_firewall_feature' not in st.session_state:
+            # Case Info Header Card: Background color changed to #2f6690
             st.markdown(f"""
-                <div style='background-color:#191970;padding:20px 36px 16px 36px;border-radius:16px 16px 0 0;margin-bottom:1.5rem;'>
+                <div style='background-color:#2f6690;padding:20px 36px 16px 36px;border-radius:16px 16px 0 0;margin-bottom:1.5rem;'>
                     <div style='flex:1;'>
                         <span style='font-size:2.2rem;font-weight:700;color:#fff;'>Case: {case_number}</span><br>
                         <span style='font-size:1.1rem;color:#eae6f7;'>Investigator: {investigator_name}</span><br>
@@ -117,7 +117,8 @@ def show_firewall_analysis(case_number, investigator_name, case_name, remarks, u
                         key=f"firewall_card_{idx}",
                         css_styles="""
                             button {
-                                background-color: #b71c1c;
+                                /* Feature Cards: Background color changed to #1c4868 */
+                                background-color: #1c4868;
                                 opacity: 1.0;
                                 color: white;
                                 border-radius: 12px;
@@ -131,7 +132,8 @@ def show_firewall_analysis(case_number, investigator_name, case_name, remarks, u
                                 transition: 0.2s ease-in-out;
                             }
                             button:hover {
-                                background-color: #7f0000;
+                                /* Adjusted hover color for visual effect */
+                                background-color: #367588;
                                 transform: scale(1.02);
                                 cursor: pointer;
                             }
