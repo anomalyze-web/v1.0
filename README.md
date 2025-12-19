@@ -10,11 +10,11 @@ Anomalyse is a modular forensic tool built in Python with a clean Streamlit-base
 -▶️ [Click here to watch the video demo](https://drive.google.com/file/d/1yXVqtBrPK6BNLVQ63t3xly8E6VLGkYpn/view?usp=drive_link)
 
 ## Live Demo
-👉 https://anomalyze-9evm4xrdnkxkyemu2weulg.streamlit.app/
+- [Click here to check out Anomalyze](https://anomalyze.streamlit.app/)
 
 ---
 
-## ⚙ Features
+## Features
 
 - Log Analysis (Firewall, IPDR, CDR) + co-relation between multiple files
 - 52 Features under which logs can be run through for analysis
