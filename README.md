@@ -7,10 +7,10 @@ Anomalyse is a modular forensic tool built in Python with a clean Streamlit-base
 
 ## Working Video
 
--▶️ [Click here to watch the video demo](https://drive.google.com/file/d/1yXVqtBrPK6BNLVQ63t3xly8E6VLGkYpn/view?usp=drive_link)
+[Click here to watch the video demo](https://drive.google.com/file/d/1yXVqtBrPK6BNLVQ63t3xly8E6VLGkYpn/view?usp=drive_link)
 
 ## Live Demo
-- [Click here to check out Anomalyze](https://anomalyze.streamlit.app/)
+[Click here to check out Anomalyze](https://anomalyze.streamlit.app/)
 
 ---
 
