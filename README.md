@@ -69,7 +69,7 @@ Anomalyze moves beyond static rule-based detection by employing ML models to cat
 ## Interface Gallery
 | **CDR ANALYSIS** | **IPDR Analysis** | **Firewall Analysis** | **Correlation**
 |:---:|:---:|:---:|:---:|
-| ![CDR]([link_to_image.png](https://github.com/anomalyze-web/v1.0/blob/main/live_demo/cdr.png?raw=true)) | ![IPDR]([link_to_image.png](https://github.com/anomalyze-web/v1.0/blob/main/live_demo/ipdr.png?raw=true)) | ![Firewall]([link_to_image.png](https://github.com/anomalyze-web/v1.0/blob/main/live_demo/firewall.png?raw=true)) | ![Correlation]([link_to_image.pn](https://github.com/anomalyze-web/v1.0/blob/main/live_demo/Correlation.png?raw=true)g) |
+| ![CDR](https://github.com/anomalyze-web/v1.0/blob/main/live_demo/cdr.png?raw=true) | ![IPDR]([link_to_image.png](https://github.com/anomalyze-web/v1.0/blob/main/live_demo/ipdr.png?raw=true)) | ![Firewall]([link_to_image.png](https://github.com/anomalyze-web/v1.0/blob/main/live_demo/firewall.png?raw=true)) | ![Correlation]([link_to_image.pn](https://github.com/anomalyze-web/v1.0/blob/main/live_demo/Correlation.png?raw=true)g) |
 
 ---
 
