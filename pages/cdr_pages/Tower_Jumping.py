@@ -8,9 +8,7 @@ import tempfile
 import os
 import logging
 
-# ==========================================
 # 1. CONFIGURATION & CONSTANTS
-# ==========================================
 
 REQUIRED_COLUMNS = ['imsi', 'start_time', 'latitude', 'longitude', 'cell_id']
 
@@ -23,9 +21,7 @@ CDR_COLUMN_MAP = {
     "longitude": ["longitude", "lon", "lng"]
 }
 
-# ==========================================
 # 2. DATA NORMALIZATION & VALIDATION
-# ==========================================
 
 def normalize_columns(df: pd.DataFrame, column_map: dict) -> pd.DataFrame:
     """Standardizes column names based on a mapping dictionary."""
@@ -58,9 +54,8 @@ def parse_cdr(df: pd.DataFrame) -> pd.DataFrame:
             df[col] = pd.to_numeric(df[col], errors='coerce')
     return df.dropna(subset=REQUIRED_COLUMNS)
 
-# ==========================================
 # 3. ANALYSIS LOGIC (VECTORIZED)
-# ==========================================
+
 
 def haversine_vectorized(lat1, lon1, lat2, lon2):
     """
@@ -89,25 +84,20 @@ def analyze_logic(df: pd.DataFrame, max_dist_km: float, max_time_min: float):
     df = df.sort_values(by=['imsi', 'start_time']).reset_index(drop=True)
     
     # 2. Shift columns to compare Row N with Row N-1
-    # We group by IMSI so we don't compare the last call of User A with first call of User B
     df['prev_start_time'] = df.groupby('imsi')['start_time'].shift(1)
     df['prev_lat'] = df.groupby('imsi')['latitude'].shift(1)
     df['prev_lon'] = df.groupby('imsi')['longitude'].shift(1)
     df['prev_cell'] = df.groupby('imsi')['cell_id'].shift(1)
     
     # 3. Calculate Differences
-    # Time diff in minutes
     df['time_diff_min'] = (df['start_time'] - df['prev_start_time']).dt.total_seconds() / 60.0
-    
-    # Distance diff in KM
+
     df['dist_km'] = haversine_vectorized(
         df['prev_lat'], df['prev_lon'], 
         df['latitude'], df['longitude']
     )
     
     # 4. Filter Anomalies
-    # Logic: Moved FAR (> max_dist) in LITTLE TIME (<= max_time)
-    # We also filter out NaNs (the first record for every user)
     mask = (df['dist_km'] >= max_dist_km) & (df['time_diff_min'] <= max_time_min) & (df['time_diff_min'] >= 0)
     
     anomalies = df[mask].copy()
@@ -125,9 +115,7 @@ def analyze_logic(df: pd.DataFrame, max_dist_km: float, max_time_min: float):
     
     return result
 
-# ==========================================
 # 4. REPORT GENERATION (PDF)
-# ==========================================
 
 class PDFReport(FPDF):
     def header(self):
@@ -206,12 +194,10 @@ def generate_pdf_report(file_name, anomalies, settings):
     pdf.output(tmp_file.name)
     return tmp_file.name
 
-# ==========================================
 # 5. MAIN CONTROLLER
-# ==========================================
 
 def run():
-    st.markdown("## 🗼 Tower Jumping Analysis")
+    st.markdown("## Tower Jumping Analysis")
     st.markdown("---")
     
     # Initialize State
@@ -220,7 +206,7 @@ def run():
     if 'tj_pdf' not in st.session_state: st.session_state.tj_pdf = None
 
     # --- 1. SETTINGS & UPLOAD ---
-    with st.expander("⚙️ Analysis Parameters", expanded=True):
+    with st.expander("Analysis Parameters", expanded=True):
         col1, col2 = st.columns(2)
         with col1:
             dist_thresh = st.number_input(
@@ -264,7 +250,7 @@ def run():
 
     # --- 3. RESULTS DISPLAY ---
     if st.session_state.tj_anomalies is not None:
-        st.subheader("🚩 Detected Tower Jumps")
+        st.subheader("Detected Tower Jumps")
         
         if st.session_state.tj_anomalies.empty:
             st.info(f"No events found where distance > {dist_thresh}km and time < {time_thresh}min.")
