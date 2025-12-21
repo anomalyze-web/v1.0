@@ -148,7 +148,7 @@ def generate_pdf_report(file_name, suspicious_df, settings):
     
 # 5. MAIN CONTROLLER
 def run():
-    st.markdown("##Strange SIM Use (International Abuse)")
+    st.markdown("## Strange SIM Use (International Abuse)")
     st.markdown("---")
 
     # Initialize Session State
