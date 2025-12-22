@@ -6,10 +6,7 @@ import os
 import logging
 from datetime import datetime
 
-# ==========================================
 # 1. CONFIGURATION & CONSTANTS
-# ==========================================
-
 REQUIRED_COLUMNS = ['calling_number', 'called_number', 'call_direction', 'start_time']
 
 CDR_COLUMN_MAP = {
@@ -21,10 +18,7 @@ CDR_COLUMN_MAP = {
 
 DEFAULT_PREFIXES = "1800, 1860, 800, 198, 199"
 
-# ==========================================
 # 2. DATA NORMALIZATION & VALIDATION
-# ==========================================
-
 def normalize_columns(df: pd.DataFrame, column_map: dict) -> pd.DataFrame:
     """Standardizes column names based on a mapping dictionary."""
     col_rename = {}
@@ -58,10 +52,7 @@ def parse_cdr(df: pd.DataFrame) -> pd.DataFrame:
             
     return df
 
-# ==========================================
 # 3. ANALYSIS LOGIC (CORE ENGINE)
-# ==========================================
-
 def analyze_logic(df: pd.DataFrame, abuse_threshold: int, prefixes_str: str):
     """
     Detects abusive calling patterns to specific toll-free prefixes.
@@ -96,10 +87,7 @@ def analyze_logic(df: pd.DataFrame, abuse_threshold: int, prefixes_str: str):
 
     return abusive_users, top_targets
 
-# ==========================================
 # 4. REPORT GENERATION (PDF)
-# ==========================================
-
 class PDFReport(FPDF):
     def header(self):
         self.set_font('Arial', 'B', 15)
@@ -170,12 +158,9 @@ def generate_pdf_report(file_name, abusive_users, top_targets, settings):
     pdf.output(tmp_file.name)
     return tmp_file.name
 
-# ==========================================
 # 5. MAIN CONTROLLER
-# ==========================================
-
 def run():
-    st.markdown("## ☎️ Toll-Free Abuse Detection")
+    st.markdown("## Toll-Free Abuse Detection")
     st.markdown("---")
 
     # Initialize State
@@ -185,7 +170,7 @@ def run():
     if 'tf_pdf' not in st.session_state: st.session_state.tf_pdf = None
 
     # --- 1. SETTINGS & UPLOAD ---
-    with st.expander("⚙️ Analysis Parameters", expanded=True):
+    with st.expander("Analysis Parameters", expanded=True):
         col1, col2 = st.columns(2)
         with col1:
             threshold = st.number_input(
@@ -232,7 +217,7 @@ def run():
     if st.session_state.tf_abusers is not None:
         
         # Section A: Abusers
-        st.subheader("🚩 Frequent Toll-Free Callers")
+        st.subheader("Frequent Toll-Free Callers")
         if st.session_state.tf_abusers.empty:
             st.info(f"No callers exceeded {threshold} calls/day to toll-free numbers.")
         else:
@@ -241,7 +226,7 @@ def run():
         st.divider()
 
         # Section B: Top Targets
-        st.subheader("📊 Most Dialed Services")
+        st.subheader("Most Dialed Services")
         if not st.session_state.tf_targets.empty:
             col_chart, col_table = st.columns([2, 1])
             with col_chart:
@@ -258,7 +243,7 @@ def run():
             st.divider()
             with open(st.session_state.tf_pdf, "rb") as f:
                 st.download_button(
-                    label="📄 Download Forensic Report (PDF)",
+                    label="Download Forensic Report (PDF)",
                     data=f,
                     file_name="Toll_Free_Abuse_Report.pdf",
                     mime="application/pdf"
